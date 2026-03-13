@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="static/images/betty_ai_logo.png" alt="Betty AI Logo" width="120">
+</p>
+
 # Betty — AI Voice Companion for Truck Drivers
 
 > Proactive AI that calls truck drivers when safety systems detect fatigue, erratic driving, or approaching break limits. Real conversations that save lives.

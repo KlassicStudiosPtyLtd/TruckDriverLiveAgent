@@ -83,7 +83,7 @@ Key lessons:
 
 This is a hackathon prototype, but the path to real-world deployment is clear:
 - Connect to a telephone service (eg. Twilio) so that real world conversations can take place
-- Connect the dashboard and browswer to all access to the microphone so that we can interact with Betty via the web
+- Connect the dashboard and browser to all access to the microphone so that we can interact with Betty via the web
 - Connect to actual telematics APIs (Seeing Machines, Lytx) instead of mock data
 - Multi-language support for Australia's diverse trucking workforce
 - Shift-over-shift wellness trending to spot patterns across weeks

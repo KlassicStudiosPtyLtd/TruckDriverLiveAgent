@@ -6,6 +6,7 @@
     <title>Betty — Interactive Demo (Alpha)</title>
     <link rel="stylesheet" href="/static/style.css" id="main-css">
     <link rel="stylesheet" href="/static/demo.css" id="demo-css">
+    <link rel="icon" type="image/png" href="/static/images/betty_ai_logo.png">
     <script>
         document.getElementById('main-css').href = '/static/style.css?v=' + Date.now();
         document.getElementById('demo-css').href = '/static/demo.css?v=' + Date.now();
@@ -15,7 +16,7 @@
 
     <!-- Progress bar -->
     <div class="demo-progress">
-        <div class="demo-progress-logo">Betty</div>
+        <div class="demo-progress-logo"><img src="/static/images/betty_ai_logo.png" alt="Betty AI" style="height:28px; border-radius:6px; vertical-align:middle; margin-right:6px;">Betty</div>
         <div class="demo-progress-steps" id="progress-steps"></div>
         <div class="demo-step-label" id="progress-label">Introduction</div>
     </div>
@@ -25,6 +26,7 @@
         <!-- PAGE 1: Meet Betty -->
         <div class="demo-page active" id="page-1" data-title="Meet Betty">
             <div class="demo-hero">
+                <img src="/static/images/betty_ai_logo.png" alt="Betty AI" style="height:120px; border-radius:20px; margin-bottom:1rem;">
                 <div class="demo-page-number">Interactive Demo (Alpha)</div>
                 <h1>Meet Betty</h1>
                 <div class="demo-subtitle">

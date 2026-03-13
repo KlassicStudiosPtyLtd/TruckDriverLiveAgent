@@ -100,6 +100,7 @@ function goToPage(page) {
   }
 
   updateProgressBar();
+  sessionStorage.setItem('betty-demo-page', page);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
   // Load frames when entering page 2 for the first time
@@ -720,6 +721,11 @@ async function loadFatigueFrames() {
 
 // --- Init ---
 
+const savedPage = parseInt(sessionStorage.getItem('betty-demo-page'));
+if (savedPage >= 1 && savedPage <= TOTAL_PAGES) {
+  currentPage = savedPage;
+}
 buildProgressBar();
+goToPage(currentPage);
 connectDemoWs();
 setInterval(pollTranscripts, 2000);

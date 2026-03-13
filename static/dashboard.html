@@ -6,6 +6,7 @@
     <title>Betty Demo Dashboard (Alpha)</title>
     <link rel="stylesheet" href="/static/style.css" id="main-css">
     <link rel="stylesheet" href="/static/tutorial.css" id="tutorial-css">
+    <link rel="icon" type="image/png" href="/static/images/betty_ai_logo.png">
     <script>
         document.getElementById('main-css').href = '/static/style.css?v=' + Date.now();
         document.getElementById('tutorial-css').href = '/static/tutorial.css?v=' + Date.now();
@@ -13,9 +14,12 @@
 </head>
 <body>
     <header>
-        <div>
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+            <img src="/static/images/betty_ai_logo.png" alt="Betty AI" style="height:40px; border-radius:8px;">
+            <div>
             <h1>Betty Demo Dashboard (Alpha)</h1>
             <div class="subtitle">AI Voice Companion for Truck Drivers</div>
+            </div>
         </div>
         <div style="margin-left:auto; display:flex; gap:0.5rem;">
             <a href="/demo" class="btn btn-outline" style="font-size:0.8rem; color:white; border-color:rgba(255,255,255,0.4); text-decoration:none;">

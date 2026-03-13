@@ -464,6 +464,7 @@ async def blog_post(slug: str):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Betty AI — Blog</title>
+<link rel="icon" type="image/png" href="/static/images/betty_ai_logo.png">
 <style>
   body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
          max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.7;
@@ -477,9 +478,16 @@ async def blog_post(slug: str):
   a {{ color: #2980b9; }}
   hr {{ border: none; border-top: 1px solid #ddd; margin: 2em 0; }}
   img {{ max-width: 100%; }}
+  .blog-header {{ display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5em; }}
+  .blog-header img {{ height: 48px; border-radius: 10px; }}
+  .blog-header a {{ text-decoration: none; color: inherit; }}
 </style>
 </head>
 <body>
+<div class="blog-header">
+  <a href="/"><img src="/static/images/betty_ai_logo.png" alt="Betty AI"></a>
+  <a href="/"><strong>Betty AI</strong></a>
+</div>
 {html_body}
 </body>
 </html>"""
