@@ -70,12 +70,13 @@ class TestEvents:
         assert isinstance(events, list)
 
     def test_add_event(self):
+        from datetime import datetime, timezone
         initial = len(get_recent_events("DRV-001"))
         add_event("DRV-001", {
             "type": "fatigue",
             "event_type": "yawning",
             "severity": "low",
-            "timestamp": "2026-03-12T10:00:00Z",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "description": "Test event",
         })
         assert len(get_recent_events("DRV-001")) == initial + 1
