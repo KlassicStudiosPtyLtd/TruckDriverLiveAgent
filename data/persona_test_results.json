@@ -1,0 +1,445 @@
+{
+  "timestamp": "2026-03-08 12:24:03",
+  "total_tests": 20,
+  "passed": 20,
+  "failed": 0,
+  "overall_score": 58,
+  "overall_max": 128,
+  "overall_pct": 45,
+  "results": [
+    {
+      "test": 1,
+      "name": "Easy Run",
+      "driver_id": "DRV-001",
+      "trigger_type": "fatigue_camera",
+      "mood": "cheerful",
+      "situation": "beautiful_drive",
+      "resistance": "cooperative",
+      "status": "PASS",
+      "transcript_lines": 51,
+      "eval": {
+        "score": 6,
+        "max_score": 7,
+        "pct": 86,
+        "notes": [
+          "Mood 'cheerful' detected: love",
+          "Situation 'beautiful_drive' detected: stunning",
+          "Cooperative shown: yeah, right",
+          "Short conversation: 51 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 2,
+      "name": "Tough Day",
+      "driver_id": "DRV-002",
+      "trigger_type": "fatigue_camera",
+      "mood": "stressed",
+      "situation": "running_late",
+      "resistance": "resistant",
+      "status": "PASS",
+      "transcript_lines": 69,
+      "eval": {
+        "score": 4,
+        "max_score": 7,
+        "pct": 57,
+        "notes": [
+          "Mood 'stressed' detected: boss, late, pressure",
+          "Situation 'running_late' detected: late, behind",
+          "Betty didn't show clear adaptation to 'stressed'",
+          "Short conversation: 69 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 3,
+      "name": "Danger Zone",
+      "driver_id": "DRV-003",
+      "trigger_type": "fatigue_camera",
+      "mood": "exhausted",
+      "situation": "bad_sleep",
+      "resistance": "defiant",
+      "status": "PASS",
+      "transcript_lines": 18,
+      "eval": {
+        "score": 0,
+        "max_score": 9,
+        "pct": 0,
+        "notes": [
+          "Mood 'exhausted' keywords not found in driver speech",
+          "Situation 'bad_sleep' keywords not found",
+          "Betty didn't show clear adaptation to 'exhausted'",
+          "Defiant resistance not clearly shown",
+          "Short conversation: 18 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 4,
+      "name": "Lonely Night",
+      "driver_id": "DRV-001",
+      "trigger_type": "erratic_driving",
+      "mood": "lonely",
+      "situation": "radio_broke",
+      "resistance": "cooperative",
+      "status": "PASS",
+      "transcript_lines": 77,
+      "eval": {
+        "score": 6,
+        "max_score": 9,
+        "pct": 67,
+        "notes": [
+          "Mood 'lonely' detected: miss, family",
+          "Situation 'radio_broke' detected: radio, silence",
+          "Betty didn't show clear adaptation to 'lonely'",
+          "Cooperative shown: yeah",
+          "Short conversation: 77 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 5,
+      "name": "Old Hand",
+      "driver_id": "DRV-002",
+      "trigger_type": "erratic_driving",
+      "mood": "cocky",
+      "situation": "normal",
+      "resistance": "defiant",
+      "status": "PASS",
+      "transcript_lines": 45,
+      "eval": {
+        "score": 2,
+        "max_score": 5,
+        "pct": 40,
+        "notes": [
+          "Mood 'cocky' keywords not found in driver speech",
+          "Defiant resistance shown: no",
+          "Short conversation: 45 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 6,
+      "name": "Nervous Newbie",
+      "driver_id": "DRV-003",
+      "trigger_type": "break_limit",
+      "mood": "new_driver",
+      "situation": "bad_weather",
+      "resistance": "cooperative",
+      "status": "PASS",
+      "transcript_lines": 52,
+      "eval": {
+        "score": 4,
+        "max_score": 7,
+        "pct": 57,
+        "notes": [
+          "Mood 'new_driver' keywords not found in driver speech",
+          "Situation 'bad_weather' detected: weather",
+          "Cooperative shown: yeah, right",
+          "Short conversation: 52 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 7,
+      "name": "Road Rage",
+      "driver_id": "DRV-001",
+      "trigger_type": "companion_check_in",
+      "mood": "grumpy",
+      "situation": "argument_dispatch",
+      "resistance": "resistant",
+      "status": "PASS",
+      "transcript_lines": 33,
+      "eval": {
+        "score": 4,
+        "max_score": 7,
+        "pct": 57,
+        "notes": [
+          "Mood 'grumpy' detected: don't",
+          "Situation 'argument_dispatch' detected: dispatch, blue",
+          "Betty didn't show clear adaptation to 'grumpy'",
+          "Short conversation: 33 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 8,
+      "name": "Shaken Up",
+      "driver_id": "DRV-002",
+      "trigger_type": "driver_initiated",
+      "mood": "anxious",
+      "situation": "near_miss",
+      "resistance": "cooperative",
+      "status": "PASS",
+      "transcript_lines": 14,
+      "eval": {
+        "score": 4,
+        "max_score": 9,
+        "pct": 44,
+        "notes": [
+          "Mood 'anxious' keywords not found in driver speech",
+          "Situation 'near_miss' detected: heart",
+          "Betty didn't show clear adaptation to 'anxious'",
+          "Cooperative shown: right",
+          "Short conversation: 14 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 9,
+      "name": "Missing Home",
+      "driver_id": "DRV-003",
+      "trigger_type": "fatigue_camera",
+      "mood": "homesick",
+      "situation": "normal",
+      "resistance": "cooperative",
+      "status": "PASS",
+      "transcript_lines": 70,
+      "eval": {
+        "score": 4,
+        "max_score": 5,
+        "pct": 80,
+        "notes": [
+          "Mood 'homesick' detected: miss, family",
+          "Cooperative shown: yeah, right",
+          "Short conversation: 70 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 10,
+      "name": "Silent Type",
+      "driver_id": "DRV-001",
+      "trigger_type": "fatigue_camera",
+      "mood": "stoic",
+      "situation": "normal",
+      "resistance": "resistant",
+      "status": "PASS",
+      "transcript_lines": 46,
+      "eval": {
+        "score": 0,
+        "max_score": 1,
+        "pct": 0,
+        "notes": [
+          "Short conversation: 46 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 11,
+      "name": "Random #11",
+      "driver_id": "DRV-001",
+      "trigger_type": "break_limit",
+      "mood": "stoic",
+      "situation": "bad_weather",
+      "resistance": "resistant",
+      "status": "PASS",
+      "transcript_lines": 48,
+      "eval": {
+        "score": 2,
+        "max_score": 3,
+        "pct": 67,
+        "notes": [
+          "Situation 'bad_weather' detected: rain",
+          "Short conversation: 48 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 12,
+      "name": "Random #12",
+      "driver_id": "DRV-003",
+      "trigger_type": "erratic_driving",
+      "mood": "lonely",
+      "situation": "beautiful_drive",
+      "resistance": "defiant",
+      "status": "PASS",
+      "transcript_lines": 76,
+      "eval": {
+        "score": 4,
+        "max_score": 9,
+        "pct": 44,
+        "notes": [
+          "Mood 'lonely' detected: chat",
+          "Situation 'beautiful_drive' detected: sunrise",
+          "Betty didn't show clear adaptation to 'lonely'",
+          "Defiant resistance not clearly shown",
+          "Short conversation: 76 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 13,
+      "name": "Random #13",
+      "driver_id": "DRV-003",
+      "trigger_type": "driver_initiated",
+      "mood": "grumpy",
+      "situation": "radio_broke",
+      "resistance": "resistant",
+      "status": "PASS",
+      "transcript_lines": 50,
+      "eval": {
+        "score": 2,
+        "max_score": 7,
+        "pct": 29,
+        "notes": [
+          "Mood 'grumpy' keywords not found in driver speech",
+          "Situation 'radio_broke' detected: radio",
+          "Betty didn't show clear adaptation to 'grumpy'",
+          "Short conversation: 50 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 14,
+      "name": "Random #14",
+      "driver_id": "DRV-003",
+      "trigger_type": "erratic_driving",
+      "mood": "grumpy",
+      "situation": "bad_weather",
+      "resistance": "resistant",
+      "status": "PASS",
+      "transcript_lines": 22,
+      "eval": {
+        "score": 0,
+        "max_score": 7,
+        "pct": 0,
+        "notes": [
+          "Mood 'grumpy' keywords not found in driver speech",
+          "Situation 'bad_weather' keywords not found",
+          "Betty didn't show clear adaptation to 'grumpy'",
+          "Short conversation: 22 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 15,
+      "name": "Random #15",
+      "driver_id": "DRV-003",
+      "trigger_type": "fatigue_camera",
+      "mood": "lonely",
+      "situation": "normal",
+      "resistance": "resistant",
+      "status": "PASS",
+      "transcript_lines": 94,
+      "eval": {
+        "score": 2,
+        "max_score": 5,
+        "pct": 40,
+        "notes": [
+          "Mood 'lonely' detected: miss, family",
+          "Betty didn't show clear adaptation to 'lonely'",
+          "Short conversation: 94 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 16,
+      "name": "Random #16",
+      "driver_id": "DRV-002",
+      "trigger_type": "driver_initiated",
+      "mood": "cocky",
+      "situation": "mechanical_issue",
+      "resistance": "resistant",
+      "status": "PASS",
+      "transcript_lines": 42,
+      "eval": {
+        "score": 2,
+        "max_score": 5,
+        "pct": 40,
+        "notes": [
+          "Mood 'cocky' keywords not found in driver speech",
+          "Situation 'mechanical_issue' detected: noise",
+          "Short conversation: 42 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 17,
+      "name": "Random #17",
+      "driver_id": "DRV-002",
+      "trigger_type": "companion_check_in",
+      "mood": "stoic",
+      "situation": "beautiful_drive",
+      "resistance": "defiant",
+      "status": "PASS",
+      "transcript_lines": 33,
+      "eval": {
+        "score": 2,
+        "max_score": 5,
+        "pct": 40,
+        "notes": [
+          "Situation 'beautiful_drive' detected: sunrise",
+          "Defiant resistance not clearly shown",
+          "Short conversation: 33 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 18,
+      "name": "Random #18",
+      "driver_id": "DRV-001",
+      "trigger_type": "fatigue_camera",
+      "mood": "stressed",
+      "situation": "mechanical_issue",
+      "resistance": "resistant",
+      "status": "PASS",
+      "transcript_lines": 31,
+      "eval": {
+        "score": 2,
+        "max_score": 7,
+        "pct": 29,
+        "notes": [
+          "Mood 'stressed' detected: late, bloody",
+          "Situation 'mechanical_issue' keywords not found",
+          "Betty didn't show clear adaptation to 'stressed'",
+          "Short conversation: 31 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 19,
+      "name": "Random #19",
+      "driver_id": "DRV-002",
+      "trigger_type": "erratic_driving",
+      "mood": "cheerful",
+      "situation": "bad_sleep",
+      "resistance": "cooperative",
+      "status": "PASS",
+      "transcript_lines": 19,
+      "eval": {
+        "score": 2,
+        "max_score": 7,
+        "pct": 29,
+        "notes": [
+          "Mood 'cheerful' keywords not found in driver speech",
+          "Situation 'bad_sleep' keywords not found",
+          "Cooperative shown: yeah",
+          "Short conversation: 19 driver, 0 Betty"
+        ]
+      }
+    },
+    {
+      "test": 20,
+      "name": "Random #20",
+      "driver_id": "DRV-001",
+      "trigger_type": "erratic_driving",
+      "mood": "cheerful",
+      "situation": "mechanical_issue",
+      "resistance": "cooperative",
+      "status": "PASS",
+      "transcript_lines": 83,
+      "eval": {
+        "score": 6,
+        "max_score": 7,
+        "pct": 86,
+        "notes": [
+          "Mood 'cheerful' detected: good",
+          "Situation 'mechanical_issue' detected: brake, feel",
+          "Cooperative shown: yeah, right",
+          "Short conversation: 83 driver, 0 Betty"
+        ]
+      }
+    }
+  ]
+}

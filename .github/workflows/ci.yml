@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install google-genai fastapi uvicorn pydantic pyyaml numpy httpx cryptography Pillow opencv-python-headless pytest
+
+      - name: Run unit tests
+        env:
+          BETTY_MEMORY_KEY: ci-test-key-1234567890
+        run: pytest tests/unit/ -v
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: unit-tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install google-genai fastapi uvicorn pydantic pyyaml numpy httpx cryptography Pillow opencv-python-headless pytest
+
+      - name: Run automated conversation test
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          BETTY_MEMORY_KEY: ci-test-key-1234567890
+        run: python tests/test_conversation.py

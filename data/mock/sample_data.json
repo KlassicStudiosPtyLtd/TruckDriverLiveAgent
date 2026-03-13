@@ -1,0 +1,85 @@
+{
+  "drivers": [
+    {
+      "driver_id": "DRV-001",
+      "first_name": "Graeme",
+      "last_name": "Mitchell",
+      "phone_number": "+61412555001",
+      "vehicle_id": "TRK-042",
+      "vehicle_rego": "1XQR-742",
+      "home_base": "Perth, WA",
+      "current_route": "Perth to Coolgardie via Great Eastern Highway",
+      "emergency_contact_name": "Karen Mitchell",
+      "emergency_contact_phone": "+61412555010"
+    },
+    {
+      "driver_id": "DRV-002",
+      "first_name": "Frankie",
+      "last_name": "O'Brien",
+      "phone_number": "+61412555002",
+      "vehicle_id": "TRK-017",
+      "vehicle_rego": "1MGT-017",
+      "home_base": "Geraldton, WA",
+      "current_route": "Geraldton to Meekatharra via Midlands Road",
+      "emergency_contact_name": "Bazza O'Brien",
+      "emergency_contact_phone": "+61412555020"
+    },
+    {
+      "driver_id": "DRV-003",
+      "first_name": "Donny",
+      "last_name": "Thompson",
+      "phone_number": "+61412555003",
+      "vehicle_id": "TRK-088",
+      "vehicle_rego": "1BHL-088",
+      "home_base": "Bunbury, WA",
+      "current_route": "Port Hedland to Karratha via Great Northern Highway",
+      "emergency_contact_name": "Jenny Thompson",
+      "emergency_contact_phone": "+61412555030"
+    }
+  ],
+  "vehicles": [
+    {
+      "vehicle_id": "TRK-042",
+      "rego": "1XQR-742",
+      "make": "Kenworth",
+      "model": "T610",
+      "year": 2023,
+      "type": "Prime Mover + B-Double",
+      "fleet_number": "F042"
+    },
+    {
+      "vehicle_id": "TRK-017",
+      "rego": "1MGT-017",
+      "make": "Mack",
+      "model": "Super-Liner",
+      "year": 2022,
+      "type": "Prime Mover + Road Train",
+      "fleet_number": "F017"
+    },
+    {
+      "vehicle_id": "TRK-088",
+      "rego": "1BHL-088",
+      "make": "Western Star",
+      "model": "4964",
+      "year": 2024,
+      "type": "Prime Mover + B-Double",
+      "fleet_number": "F088"
+    }
+  ],
+  "rest_areas": [
+    {"name": "Coolgardie Rest Area", "km_marker": 557, "route": "Great Eastern Highway", "facilities": ["toilets", "water", "shade"]},
+    {"name": "Southern Cross Truck Bay", "km_marker": 370, "route": "Great Eastern Highway", "facilities": ["toilets", "water", "fuel", "food"]},
+    {"name": "Cue Rest Stop", "km_marker": 310, "route": "Midlands Road", "facilities": ["toilets", "water"]},
+    {"name": "Mt Magnet Roadhouse", "km_marker": 350, "route": "Midlands Road", "facilities": ["toilets", "water", "fuel", "food", "showers"]},
+    {"name": "Roebourne Rest Area", "km_marker": 1540, "route": "Great Northern Highway", "facilities": ["toilets", "water", "shade"]},
+    {"name": "Whim Creek Roadhouse", "km_marker": 1480, "route": "Great Northern Highway", "facilities": ["toilets", "water", "fuel", "food"]}
+  ],
+  "fleet_managers": [
+    {
+      "name": "Bruce Keenan",
+      "phone": "+61412555100",
+      "email": "bruce.keenan@outbackhaulage.com.au",
+      "role": "Fleet Manager"
+    }
+  ]
+}

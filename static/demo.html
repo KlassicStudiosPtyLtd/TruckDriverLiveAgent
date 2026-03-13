@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betty — Interactive Demo (Alpha)</title>
+    <link rel="stylesheet" href="/static/style.css" id="main-css">
+    <link rel="stylesheet" href="/static/demo.css" id="demo-css">
+    <script>
+        document.getElementById('main-css').href = '/static/style.css?v=' + Date.now();
+        document.getElementById('demo-css').href = '/static/demo.css?v=' + Date.now();
+    </script>
+</head>
+<body class="demo-body">
+
+    <!-- Progress bar -->
+    <div class="demo-progress">
+        <div class="demo-progress-logo">Betty</div>
+        <div class="demo-progress-steps" id="progress-steps"></div>
+        <div class="demo-step-label" id="progress-label">Introduction</div>
+    </div>
+
+    <div class="demo-container">
+
+        <!-- PAGE 1: Meet Betty -->
+        <div class="demo-page active" id="page-1" data-title="Meet Betty">
+            <div class="demo-hero">
+                <div class="demo-page-number">Interactive Demo (Alpha)</div>
+                <h1>Meet Betty</h1>
+                <div class="demo-subtitle">
+                    Betty is an AI voice companion for long-haul truck drivers. She proactively calls drivers
+                    when safety systems detect fatigue or risky driving, having real conversations that save lives.
+                </div>
+                <div class="demo-hero-tagline">
+                    Built with Google Gemini Live API &middot; Real-time bidirectional voice &middot; Cross-call memory
+                </div>
+                <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.5rem;">
+                    This is under Alpha development and may have stability issues.
+                </div>
+            </div>
+
+            <div class="demo-features">
+                <div class="demo-feature">
+                    <div class="demo-feature-icon">&#x1f4de;</div>
+                    <h3>Proactive Calling</h3>
+                    <p>Betty calls the driver — not the other way around. When a fatigue camera detects drowsy eyes or a telematics system flags erratic driving, Betty picks up the phone.</p>
+                </div>
+                <div class="demo-feature">
+                    <div class="demo-feature-icon">&#x1f9e0;</div>
+                    <h3>Cross-Call Memory</h3>
+                    <p>Betty remembers previous conversations within a shift. If she called about fatigue an hour ago, she'll reference it: "Last time we spoke you were looking tired..."</p>
+                </div>
+                <div class="demo-feature">
+                    <div class="demo-feature-icon">&#x1f6d1;</div>
+                    <h3>Smart Escalation</h3>
+                    <p>If a driver refuses to pull over, Betty escalates to the fleet manager with context — what happened, what she tried, and why she's concerned.</p>
+                </div>
+                <div class="demo-feature">
+                    <div class="demo-feature-icon">&#x1f5bc;&#xfe0f;</div>
+                    <h3>Visual Cards</h3>
+                    <p>Betty sends visual cards to the driver's dashboard — rest stop recommendations with AI-generated backgrounds, shift wellness summaries, and incident reports.</p>
+                </div>
+            </div>
+
+            <div class="demo-callout">
+                <strong>How this demo works:</strong> Each page demonstrates a key feature.
+                You'll trigger real AI conversations and see Betty respond in real-time.
+                All calls are simulated — an AI driver persona talks to Betty so no microphone is needed.
+            </div>
+
+            <div class="demo-nav">
+                <div></div>
+                <button class="demo-btn demo-btn-primary" onclick="goToPage(2)">
+                    Start the Demo &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 2: Fatigue Detection -->
+        <div class="demo-page" id="page-2" data-title="Fatigue Detection">
+            <div class="demo-page-number">Step 1 of 5</div>
+            <h1>Fatigue Detection</h1>
+            <div class="demo-subtitle">
+                When an in-cab camera detects signs of fatigue — droopy eyes, yawning, or head nodding —
+                Betty receives the video feed and calls the driver to check on them.
+            </div>
+
+            <div class="demo-callout">
+                <strong>What happens:</strong> A fatigue camera event fires. Betty receives video frames showing
+                the driver's fatigue behaviour, then calls to have a caring conversation about pulling over for a rest.
+            </div>
+
+            <!-- Video preview -->
+            <div class="demo-interactive">
+                <h3>In-Cab Fatigue Camera Feed</h3>
+                <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:0.75rem;">This video is AI generated and not real footage.</div>
+                <div class="demo-video-section">
+                    <div class="demo-video-player">
+                        <video id="fatigue-video" controls muted loop playsinline
+                               style="width:100%; border-radius:8px; background:#000;">
+                            <source src="/api/videos/dazza/fatigue_droopy_eyes_high.mp4" type="video/mp4">
+                        </video>
+                        <div style="font-size:0.8rem; color:#64748b; margin-top:0.5rem; text-align:center;">
+                            Sample fatigue camera footage — droopy eyes detected
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:1.25rem;">
+                    <h3>Frames Sent to Betty</h3>
+                    <div style="font-size:0.85rem; color:#94a3b8; margin-bottom:0.75rem;">
+                        These JPEG frames are extracted at 1fps and sent to Betty's Gemini session via
+                        <code style="background:#1e293b; padding:0.15rem 0.4rem; border-radius:4px; font-size:0.8rem;">send_realtime_input(video=...)</code>
+                        so she can see what the camera detected.
+                    </div>
+                    <div class="demo-frames-strip" id="frames-strip">
+                        <div class="demo-frames-loading">
+                            <div class="demo-spinner"></div>
+                            <span style="margin-left:0.5rem; color:#64748b;">Extracting frames...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trigger + call -->
+            <div class="demo-interactive">
+                <h3>Try it — trigger a fatigue event</h3>
+                <div class="demo-btn-group" style="margin-bottom:1rem;">
+                    <button class="demo-btn demo-btn-warning" id="btn-fatigue" onclick="triggerFatigue()">
+                        Detect Drowsy Eyes
+                    </button>
+                </div>
+                <div class="demo-call-area" id="call-area-2">
+                    <div class="demo-call-status" id="call-status-2">Press the button to trigger a fatigue event</div>
+                    <div class="demo-call-timer" id="call-timer-2">00:00</div>
+                </div>
+                <div class="demo-transcript" id="transcript-2">
+                    <div class="demo-transcript-placeholder">Conversation will appear here...</div>
+                </div>
+            </div>
+
+            <div class="demo-nav">
+                <button class="demo-btn demo-btn-outline" onclick="goToPage(1)">&larr; Back</button>
+                <div class="demo-nav-hint" id="nav-hint-2">Complete the call to continue</div>
+                <button class="demo-btn demo-btn-primary" id="btn-next-2" onclick="goToPage(3)">
+                    Next: Escalation &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 3: Smart Escalation -->
+        <div class="demo-page" id="page-3" data-title="Smart Escalation">
+            <div class="demo-page-number">Step 2 of 5</div>
+            <h1>Smart Escalation</h1>
+            <div class="demo-subtitle">
+                When a driver shows dangerous behaviour and Betty can't convince them to stop,
+                she escalates to the fleet manager with a detailed incident report.
+            </div>
+
+            <div class="demo-callout">
+                <strong>What happens:</strong> A high-severity head-nod (microsleep) event fires. The simulated
+                driver is stubborn and refuses to pull over. Betty escalates and generates an incident report card.
+            </div>
+
+            <div class="demo-interactive">
+                <h3>Try it — trigger a microsleep with a stubborn driver</h3>
+                <div class="demo-btn-group" style="margin-bottom:1rem;">
+                    <button class="demo-btn demo-btn-danger" id="btn-escalation" onclick="triggerEscalation()">
+                        Detect Microsleep
+                    </button>
+                </div>
+                <div class="demo-call-area" id="call-area-3">
+                    <div class="demo-call-status" id="call-status-3">Press the button to trigger a microsleep event</div>
+                    <div class="demo-call-timer" id="call-timer-3">00:00</div>
+                </div>
+                <div class="demo-transcript" id="transcript-3">
+                    <div class="demo-transcript-placeholder">Conversation will appear here...</div>
+                </div>
+                <div class="demo-cards-area" id="cards-area-3"></div>
+            </div>
+
+            <div class="demo-nav">
+                <button class="demo-btn demo-btn-outline" onclick="goToPage(2)">&larr; Back</button>
+                <div class="demo-nav-hint" id="nav-hint-3"></div>
+                <button class="demo-btn demo-btn-primary" id="btn-next-3" onclick="goToPage(4)">
+                    Next: Memory &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 4: Cross-Call Memory -->
+        <div class="demo-page" id="page-4" data-title="Cross-Call Memory">
+            <div class="demo-page-number">Step 3 of 5</div>
+            <h1>Cross-Call Memory</h1>
+            <div class="demo-subtitle">
+                Betty remembers what happened in previous calls within a driver's shift.
+                If she called about fatigue earlier, she'll reference it in the next conversation.
+            </div>
+
+            <div class="demo-callout">
+                <strong>What happens:</strong> First, a check-in call establishes context. Then a second fatigue
+                event fires — listen for Betty referencing the earlier conversation.
+                Memory is encrypted with AES-256-GCM and auto-expires after 14 hours.
+            </div>
+
+            <div class="demo-interactive">
+                <h3>Try it — two calls, same shift</h3>
+                <div class="demo-btn-group" style="margin-bottom:1rem;">
+                    <button class="demo-btn demo-btn-primary" id="btn-memory-1" onclick="triggerMemoryCall1()">
+                        Call 1: Companion Check-in
+                    </button>
+                    <button class="demo-btn demo-btn-warning" id="btn-memory-2" onclick="triggerMemoryCall2()" disabled>
+                        Call 2: Fatigue Event (after Call 1)
+                    </button>
+                </div>
+                <div class="demo-call-area" id="call-area-4">
+                    <div class="demo-call-status" id="call-status-4">Start with Call 1 — a friendly check-in</div>
+                    <div class="demo-call-timer" id="call-timer-4">00:00</div>
+                </div>
+                <div class="demo-transcript" id="transcript-4">
+                    <div class="demo-transcript-placeholder">Conversation will appear here...</div>
+                </div>
+            </div>
+
+            <div class="demo-nav">
+                <button class="demo-btn demo-btn-outline" onclick="goToPage(3)">&larr; Back</button>
+                <div class="demo-nav-hint" id="nav-hint-4"></div>
+                <button class="demo-btn demo-btn-primary" id="btn-next-4" onclick="goToPage(5)">
+                    Next: Shift Summary &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 5: Shift Summary -->
+        <div class="demo-page" id="page-5" data-title="Shift Summary">
+            <div class="demo-page-number">Step 4 of 5</div>
+            <h1>Shift Summary</h1>
+            <div class="demo-subtitle">
+                At the end of a shift, Betty generates visual summary cards — wellness reports
+                with shift timelines, rest stop recommendations with AI-generated scenic backgrounds,
+                and incident reports for the fleet manager.
+            </div>
+
+            <div class="demo-interactive">
+                <h3>Try it — generate visual cards</h3>
+                <div class="demo-btn-group" style="margin-bottom:1rem;">
+                    <button class="demo-btn demo-btn-primary" id="btn-card-rest" onclick="generateDemoCard('rest_stop', 'southern_cross')">
+                        Rest Stop Card
+                    </button>
+                    <button class="demo-btn demo-btn-success" id="btn-card-wellness" onclick="generateDemoCard('wellness', 'good_shift')">
+                        Wellness Summary
+                    </button>
+                    <button class="demo-btn demo-btn-danger" id="btn-card-incident" onclick="generateDemoCard('incident', 'microsleep')">
+                        Incident Report
+                    </button>
+                </div>
+                <div class="demo-callout" style="margin-top:0;">
+                    <strong>Rest stop cards</strong> use Gemini Flash + Google Search grounding to describe the real
+                    location, then Imagen 4 generates a scenic background photograph.
+                </div>
+                <div class="demo-cards-area" id="cards-area-5"></div>
+            </div>
+
+            <div class="demo-nav">
+                <button class="demo-btn demo-btn-outline" onclick="goToPage(4)">&larr; Back</button>
+                <div></div>
+                <button class="demo-btn demo-btn-primary" id="btn-next-5" onclick="goToPage(6)">
+                    Next: Architecture &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 6: Architecture -->
+        <div class="demo-page" id="page-6" data-title="Architecture">
+            <div class="demo-page-number">Step 5 of 5</div>
+            <h1>How It Works</h1>
+            <div class="demo-subtitle">
+                Betty is built entirely on Google's AI stack — Gemini Live API for voice,
+                Gemini Flash for grounding, and Imagen 4 for visual card generation.
+            </div>
+
+            <div class="demo-arch-section">
+                <h3>Voice Call Flow</h3>
+                <div class="demo-arch-flow">
+                    <span class="demo-arch-node">Safety Trigger</span>
+                    <span class="demo-arch-arrow">&rarr;</span>
+                    <span class="demo-arch-node">Risk Scoring</span>
+                    <span class="demo-arch-arrow">&rarr;</span>
+                    <span class="demo-arch-node highlight">Gemini Live API</span>
+                    <span class="demo-arch-arrow">&harr;</span>
+                    <span class="demo-arch-node">WebSocket Bridge</span>
+                    <span class="demo-arch-arrow">&harr;</span>
+                    <span class="demo-arch-node">Driver (Browser/Phone)</span>
+                </div>
+            </div>
+
+            <div class="demo-arch-section">
+                <h3>Visual Card Pipeline</h3>
+                <div class="demo-arch-flow">
+                    <span class="demo-arch-node">Rest Stop Name</span>
+                    <span class="demo-arch-arrow">&rarr;</span>
+                    <span class="demo-arch-node highlight">Gemini Flash + Search Grounding</span>
+                    <span class="demo-arch-arrow">&rarr;</span>
+                    <span class="demo-arch-node highlight">Imagen 4</span>
+                    <span class="demo-arch-arrow">&rarr;</span>
+                    <span class="demo-arch-node">Scenic Background</span>
+                    <span class="demo-arch-arrow">&rarr;</span>
+                    <span class="demo-arch-node">Pillow Renderer</span>
+                </div>
+            </div>
+
+            <div class="demo-features" style="margin-top:2rem;">
+                <div class="demo-feature">
+                    <h3>Gemini Live API</h3>
+                    <p>Real-time bidirectional audio streaming. Betty hears the driver, responds naturally, and can call tools mid-conversation (check hours, escalate, send cards).</p>
+                </div>
+                <div class="demo-feature">
+                    <h3>Function Calling</h3>
+                    <p>6 tool declarations: get_driver_hours, get_recent_events, escalate_to_manager, log_conversation_summary, assess_driver_mood, send_rest_stop_card.</p>
+                </div>
+                <div class="demo-feature">
+                    <h3>Encrypted Memory</h3>
+                    <p>AES-256-GCM encrypted SQLite store with per-driver key derivation (HKDF). 14-hour TTL with automatic hard deletion of expired entries.</p>
+                </div>
+                <div class="demo-feature">
+                    <h3>Video Understanding</h3>
+                    <p>Fatigue camera footage is sent as JPEG frames to Betty's Gemini session. She can see what the camera detected and reference it in conversation.</p>
+                </div>
+            </div>
+
+            <div class="demo-arch-section">
+                <h3>Tech Stack</h3>
+                <div class="demo-arch-flow">
+                    <span class="demo-arch-node highlight">Gemini 2.5 Flash (Native Audio)</span>
+                    <span class="demo-arch-node highlight">Gemini 2.0 Flash (Grounding)</span>
+                    <span class="demo-arch-node highlight">Imagen 4</span>
+                    <span class="demo-arch-node">FastAPI</span>
+                    <span class="demo-arch-node">WebSocket</span>
+                    <span class="demo-arch-node">Web Audio API</span>
+                    <span class="demo-arch-node">Pillow</span>
+                    <span class="demo-arch-node">Cloud Run</span>
+                </div>
+            </div>
+
+            <div class="demo-nav">
+                <button class="demo-btn demo-btn-outline" onclick="goToPage(5)">&larr; Back</button>
+                <div></div>
+                <div class="demo-btn-group">
+                    <button class="demo-btn demo-btn-outline" onclick="window.location.href='/'">
+                        Open Full Dashboard
+                    </button>
+                    <button class="demo-btn demo-btn-primary" onclick="goToPage(1)">
+                        Restart Demo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>document.write('<script src="/static/demo.js?v=' + Date.now() + '"><\/script>');</script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Betty — Driver Phone</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .avatar.ringing {
+            animation: ring-pulse 1.5s ease-in-out infinite;
+        }
+
+        .avatar.connected {
+            background: linear-gradient(135deg, var(--success), #059669);
+        }
+
+        @keyframes ring-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6); }
+            50% { box-shadow: 0 0 0 20px rgba(59, 130, 246, 0); }
+        }
+
+        .caller-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .caller-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .call-timer {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .call-timer.active { display: block; }
+
+        .status-text {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .call-btn {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .call-btn:hover { transform: scale(1.1); }
+        .call-btn:active { transform: scale(0.95); }
+
+        .btn-accept {
+            background: var(--success);
+            color: white;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-decline {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-hangup {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .transcript-area {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .transcript-line {
+            margin-bottom: 0.5rem;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .transcript-line:last-child { border-bottom: none; }
+
+        .transcript-speaker {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* States */
+        .state-idle .ringing-ui,
+        .state-idle .connected-ui,
+        .state-ringing .idle-ui,
+        .state-ringing .connected-ui,
+        .state-connected .idle-ui,
+        .state-connected .ringing-ui {
+            display: none;
+        }
+
+        .audio-level {
+            width: 100%;
+            max-width: 200px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 0 auto 1rem;
+            overflow: hidden;
+        }
+
+        .audio-level-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--success);
+            border-radius: 2px;
+            transition: width 0.1s;
+        }
+
+        .connection-status {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .connection-status.online {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .connection-status.offline {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body class="state-idle">
+    <div class="connection-status offline" id="conn-status">Connecting...</div>
+
+    <div class="phone-container">
+        <div class="avatar" id="avatar">B</div>
+        <div class="caller-name">Betty</div>
+        <div class="caller-subtitle">AI Voice Companion</div>
+
+        <!-- Idle state -->
+        <div class="idle-ui">
+            <div class="status-text" id="idle-status">Waiting for incoming call...</div>
+            <div class="btn-row">
+                <button class="call-btn btn-accept" onclick="phone.callBetty()" title="Call Betty"
+                        style="width:80px; height:80px; font-size:2rem;">
+                    &#x260E;
+                </button>
+            </div>
+            <div style="color:var(--text-muted); font-size:0.85rem;">Call Betty for a chat</div>
+        </div>
+
+        <!-- Ringing state -->
+        <div class="ringing-ui">
+            <div class="status-text">Incoming call...</div>
+            <div class="btn-row">
+                <button class="call-btn btn-decline" onclick="phone.decline()" title="Decline">
+                    &#x260E;
+                </button>
+                <button class="call-btn btn-accept" onclick="phone.accept()" title="Accept">
+                    &#x260E;
+                </button>
+            </div>
+        </div>
+
+        <!-- Connected state -->
+        <div class="connected-ui">
+            <div class="call-timer" id="call-timer">00:00</div>
+            <div class="audio-level">
+                <div class="audio-level-bar" id="audio-level-bar"></div>
+            </div>
+            <div class="btn-row">
+                <button class="call-btn btn-hangup" onclick="phone.hangup()" title="Hang up">
+                    &#x260E;
+                </button>
+            </div>
+            <div class="transcript-area" id="transcript-area"></div>
+        </div>
+    </div>
+
+    <script>document.write('<script src="/static/driver.js?v=' + Date.now() + '"><\/script>');</script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const driverId = params.get('id') || 'DRV-001';
+        const phone = new DriverPhone(driverId);
+    </script>
+</body>
+</html>

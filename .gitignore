@@ -1,0 +1,10 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+data/memory.db
+data/recordings/
+tests/conversation_*.wav
+static/cards/
+scripts/
+.vscode/

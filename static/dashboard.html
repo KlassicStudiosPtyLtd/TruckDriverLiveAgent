@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betty Demo Dashboard (Alpha)</title>
+    <link rel="stylesheet" href="/static/style.css" id="main-css">
+    <link rel="stylesheet" href="/static/tutorial.css" id="tutorial-css">
+    <script>
+        document.getElementById('main-css').href = '/static/style.css?v=' + Date.now();
+        document.getElementById('tutorial-css').href = '/static/tutorial.css?v=' + Date.now();
+    </script>
+</head>
+<body>
+    <header>
+        <div>
+            <h1>Betty Demo Dashboard (Alpha)</h1>
+            <div class="subtitle">AI Voice Companion for Truck Drivers</div>
+        </div>
+        <div style="margin-left:auto; display:flex; gap:0.5rem;">
+            <a href="/demo" class="btn btn-outline" style="font-size:0.8rem; color:white; border-color:rgba(255,255,255,0.4); text-decoration:none;">
+                Interactive Demo
+            </a>
+            <button class="btn btn-outline" id="btn-restart-tour" style="font-size:0.8rem; color:white; border-color:rgba(255,255,255,0.4);" onclick="startTutorial()">
+                Restart Tour
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Driver Status -->
+        <div class="card" id="card-drivers">
+            <h2>Drivers</h2>
+            <div id="driver-list">Loading...</div>
+        </div>
+
+        <!-- Call Status -->
+        <div class="card" id="card-call-status">
+            <h2>Call Status</h2>
+            <div class="call-timer" id="call-timer">00:00</div>
+            <div style="text-align:center; margin-bottom:1rem;">
+                <span class="status-badge status-idle" id="call-status-badge">
+                    <span class="dot dot-idle"></span> No active call
+                </span>
+            </div>
+            <div id="call-info" style="font-size:0.85rem; color:var(--text-muted); text-align:center;">
+                Select a driver and trigger an event to initiate a call.
+            </div>
+            <div style="text-align:center; margin-top:1rem;">
+                <button class="btn btn-danger" id="btn-end-call" style="display:none;" onclick="endCall()">
+                    End Call
+                </button>
+            </div>
+        </div>
+
+        <!-- Trigger Controls -->
+        <div class="card" id="card-triggers">
+            <h2>Trigger Controls</h2>
+
+            <div class="trigger-section">
+                <label for="driver-select" style="font-size:0.85rem; font-weight:500;">Select Driver:</label>
+                <select id="driver-select" style="margin-top:0.25rem;">
+                    <option value="DRV-001">Dazza Mitchell (1XQR-742)</option>
+                    <option value="DRV-002">Shazza O'Brien (1MGT-017)</option>
+                    <option value="DRV-003">Macca Thompson (1BHL-088)</option>
+                </select>
+            </div>
+
+            <div class="trigger-section">
+                <h3>Fatigue Camera Event</h3>
+                <div class="trigger-row">
+                    <select id="fatigue-type" style="flex:1;">
+                        <option value="droopy_eyes">Droopy Eyes</option>
+                        <option value="yawning">Yawning</option>
+                        <option value="head_nod">Head Nod</option>
+                        <option value="distraction">Distraction</option>
+                        <option value="phone_use">Phone Use</option>
+                        <option value="smoking">Smoking</option>
+                    </select>
+                    <select id="fatigue-severity" style="flex:1;">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-warning" onclick="sendTrigger('fatigue_camera')">
+                        Send Fatigue Event
+                    </button>
+                </div>
+            </div>
+
+            <div class="trigger-section">
+                <h3>Erratic Driving Event</h3>
+                <div class="trigger-row">
+                    <select id="erratic-type" style="flex:1;">
+                        <option value="lane_deviation">Lane Deviation</option>
+                        <option value="harsh_braking">Harsh Braking</option>
+                        <option value="excessive_sway">Excessive Sway</option>
+                        <option value="rollover_intervention">Rollover Intervention</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-danger" onclick="sendTrigger('erratic_driving')">
+                        Send Erratic Driving Event
+                    </button>
+                </div>
+            </div>
+
+            <div class="trigger-section">
+                <h3>Other</h3>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="sendTrigger('break_limit')">
+                        Trigger Break Limit Warning
+                    </button>
+                    <button class="btn btn-outline" onclick="sendTrigger('companion_check_in')">
+                        Companion Check-in
+                    </button>
+                    <button class="btn btn-success" onclick="driverCallsBetty()">
+                        Driver Calls Betty
+                    </button>
+                </div>
+            </div>
+
+            <div class="trigger-section">
+                <h3>Driver Persona (Simulation)</h3>
+                <div class="trigger-row">
+                    <select id="persona-preset" style="flex:1;" onchange="applyPreset()">
+                        <option value="random">Random</option>
+                    </select>
+                </div>
+                <div class="trigger-row" style="margin-top:0.5rem;">
+                    <select id="persona-mood" style="flex:1;">
+                        <option value="">Mood: Random</option>
+                    </select>
+                    <select id="persona-situation" style="flex:1;">
+                        <option value="">Situation: Random</option>
+                    </select>
+                </div>
+                <div class="trigger-row" style="margin-top:0.5rem;">
+                    <select id="persona-resistance" style="flex:1;">
+                        <option value="">Resistance: Random</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="trigger-section">
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <label class="toggle">
+                        <input type="checkbox" id="simulate-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div>
+                        <div style="font-weight:600; font-size:0.9rem;">Simulation Mode</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted);">AI plays the driver — no mic needed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shift Simulation -->
+        <div class="card" id="card-shift">
+            <h2>Shift Simulation</h2>
+            <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
+                Run a compressed 14-hour shift with random events. Betty will call the driver multiple times with escalating triggers.
+            </div>
+
+            <div class="trigger-section">
+                <label style="font-size:0.85rem; font-weight:500;">Number of Events:</label>
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-top:0.25rem;">
+                    <input type="range" id="shift-event-count" min="2" max="12" value="5"
+                           style="flex:1; border:none; padding:0;" oninput="updateEventCountLabel()">
+                    <span id="shift-event-label" style="font-weight:600; min-width:2rem; text-align:center;">5</span>
+                </div>
+            </div>
+
+            <div class="trigger-section">
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <label class="toggle">
+                        <input type="checkbox" id="shift-clear-memory" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div>
+                        <div style="font-size:0.85rem;">Clear memory before start</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="shift-progress" style="display:none; margin-bottom:1rem;">
+                <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:0.4rem;">
+                    <span id="shift-progress-text">Starting...</span>
+                    <span id="shift-progress-count"></span>
+                </div>
+                <div style="background:#e2e8f0; border-radius:999px; height:8px; overflow:hidden;">
+                    <div id="shift-progress-bar" style="background:var(--primary); height:100%; width:0%; border-radius:999px; transition:width 0.3s;"></div>
+                </div>
+                <div id="shift-schedule" style="margin-top:0.75rem; font-size:0.8rem; max-height:150px; overflow-y:auto;"></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" id="btn-start-shift" onclick="startShift()">
+                    Start Shift Simulation
+                </button>
+                <button class="btn btn-danger" id="btn-stop-shift" style="display:none;" onclick="stopShift()">
+                    Stop Shift
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Transcription -->
+        <div class="card" id="card-transcript">
+            <h2>Live Transcription</h2>
+            <div class="transcript-feed" id="transcript-feed">
+                <div style="color:var(--text-muted); text-align:center; padding:2rem;">
+                    Transcription will appear here during an active call.
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Demo -->
+        <div class="card" id="card-generator">
+            <h2>Card Generator</h2>
+            <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
+                Generate sample visual cards to demo Betty's output capabilities.
+            </div>
+
+            <div class="trigger-section">
+                <h3>Rest Stop Recommendation</h3>
+                <div class="trigger-row">
+                    <select id="card-rest-scenario" style="flex:1;">
+                        <option value="southern_cross">Southern Cross Truck Bay — 45km, fuel/food</option>
+                        <option value="coolgardie">Coolgardie Rest Area — 85km, shade/water</option>
+                        <option value="mt_magnet">Mt Magnet Roadhouse — 30km, full amenities</option>
+                        <option value="whim_creek">Whim Creek Roadhouse — 60km, fuel/food</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="generateCard('rest_stop')">Generate Rest Stop Card</button>
+                </div>
+            </div>
+
+            <div class="trigger-section">
+                <h3>Shift Wellness Summary</h3>
+                <div class="trigger-row">
+                    <select id="card-wellness-scenario" style="flex:1;">
+                        <option value="good_shift">Good Shift — 5 events, all handled well</option>
+                        <option value="tough_shift">Tough Shift — 8 events, escalation at end</option>
+                        <option value="short_shift">Quick Run — 3 events, smooth driving</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="generateCard('wellness')">Generate Wellness Card</button>
+                </div>
+            </div>
+
+            <div class="trigger-section">
+                <h3>Incident Report</h3>
+                <div class="trigger-row">
+                    <select id="card-incident-scenario" style="flex:1;">
+                        <option value="microsleep">Microsleep — High urgency, head nod detected</option>
+                        <option value="phone">Phone Use — Medium urgency, distracted driver</option>
+                        <option value="lane_drift">Lane Drift — Medium urgency, fatigue suspected</option>
+                        <option value="rollover">Rollover Risk — High urgency, stability intervention</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-danger" onclick="generateCard('incident')">Generate Incident Card</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual Cards -->
+        <div class="card full-width" id="card-visuals">
+            <h2>Visual Cards</h2>
+            <div id="cards-feed" class="cards-grid">
+                <div class="cards-placeholder" style="color:var(--text-muted); text-align:center; padding:2rem;">
+                    Cards will appear here when Betty sends recommendations or reports.
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Log -->
+        <div class="card full-width" id="card-event-log">
+            <h2>Event Log</h2>
+            <div class="event-log" id="event-log">
+                <div class="log-entry">
+                    <span class="log-time">--:--:--</span>
+                    <span class="log-type">SYSTEM</span>
+                    <span class="log-message">Dashboard loaded. Waiting for events...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial overlay -->
+    <div id="tutorial-overlay" class="tutorial-overlay" style="display:none;">
+        <div class="tutorial-backdrop" id="tutorial-backdrop"></div>
+        <div class="tutorial-tooltip" id="tutorial-tooltip">
+            <div class="tutorial-step-indicator" id="tutorial-step-indicator"></div>
+            <div class="tutorial-title" id="tutorial-title"></div>
+            <div class="tutorial-body" id="tutorial-body"></div>
+            <div class="tutorial-nav">
+                <button class="btn btn-outline tutorial-btn" id="tutorial-btn-prev" onclick="tutorialPrev()">Back</button>
+                <button class="btn btn-outline tutorial-btn" id="tutorial-btn-skip" onclick="endTutorial()">Skip Tour</button>
+                <button class="btn btn-primary tutorial-btn" id="tutorial-btn-next" onclick="tutorialNext()">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>document.write('<script src="/static/dashboard.js?v=' + Date.now() + '"><\/script>');</script>
+    <script>document.write('<script src="/static/tutorial.js?v=' + Date.now() + '"><\/script>');</script>
+</body>
+</html>

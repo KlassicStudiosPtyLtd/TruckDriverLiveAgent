@@ -1,0 +1,46 @@
+betty:
+  personality:
+    name: "Betty"
+    voice: "Aoede"  # Gemini Live API voice
+    greeting_style: "warm"  # warm | professional | casual
+
+  memory:
+    cross_call_memory: true
+    memory_duration_hours: 14
+
+  escalation:
+    mode: "announced"  # announced | silent
+    fatigue_refusal_threshold_minutes: 10
+    consecutive_events_threshold: 3
+    event_window_minutes: 60
+    manager_notification_method: "webhook"  # webhook | sms | email
+
+  break_alerts:
+    warning_threshold_minutes: 30
+    reminder_interval_minutes: 15
+
+  call:
+    max_call_duration_minutes: 15
+    min_time_between_calls_minutes: 10
+    ring_timeout_seconds: 30
+
+  triggers:
+    fatigue_low_auto_call: true
+    fatigue_medium_auto_call: true
+    fatigue_high_auto_call: true
+    erratic_driving_auto_call: true
+    break_limit_auto_call: true
+
+google:
+  gemini:
+    model: "gemini-2.5-flash-native-audio-latest"
+    voice: "Aoede"
+    api_key_env: "GEMINI_API_KEY"  # Read from environment variable
+
+server:
+  host: "0.0.0.0"
+  port: 8000
+  debug: true
+
+logging:
+  level: "INFO"

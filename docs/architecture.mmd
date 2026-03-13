@@ -1,0 +1,69 @@
+%%{init: {'theme': 'dark', 'themeVariables': {'primaryColor': '#2563eb', 'primaryTextColor': '#f8fafc', 'primaryBorderColor': '#3b82f6', 'lineColor': '#64748b', 'secondaryColor': '#1e293b', 'tertiaryColor': '#0f172a', 'background': '#0f172a', 'mainBkg': '#1e293b', 'nodeBorder': '#334155', 'clusterBkg': '#1e293b', 'clusterBorder': '#334155', 'titleColor': '#f8fafc', 'edgeLabelBackground': '#1e293b'}}}%%
+
+graph TB
+    subgraph TRUCK["🚛 In-Cab Systems"]
+        FC["Fatigue Camera<br/><small>Droopy eyes · Yawning<br/>Head nod · Phone use</small>"]
+        TM["Telematics<br/><small>Lane drift · Harsh braking<br/>Sway · Rollover</small>"]
+        BT["Break Timer<br/><small>Hours driven<br/>Mandatory rest limit</small>"]
+    end
+
+    subgraph BACKEND["Betty Backend (Cloud Run)"]
+        TE["Trigger Engine<br/><small>Risk scoring 0-1<br/>Priority assessment</small>"]
+        CM["Call Manager<br/><small>Call lifecycle<br/>Pending → Active → Ended</small>"]
+        VF["Video Frames<br/><small>OpenCV extraction<br/>JPEG @ 1fps</small>"]
+        PM["Prompt Builder<br/><small>System prompt +<br/>trigger context +<br/>memory injection</small>"]
+        BT2["Betty Tools<br/><small>get_driver_hours<br/>get_recent_events<br/>escalate_to_manager<br/>send_rest_stop_card<br/>assess_driver_mood</small>"]
+        MEM["Memory Store<br/><small>SQLite + AES-256-GCM<br/>Per-driver encryption<br/>14h TTL auto-purge</small>"]
+        CG["Card Generator<br/><small>Pillow rendering<br/>Rest stops · Wellness<br/>Incident reports</small>"]
+    end
+
+    subgraph GOOGLE["Google Cloud APIs"]
+        GL["Gemini Live API<br/><small>gemini-2.5-flash-native-audio<br/>Bidirectional voice streaming<br/>Voice: Aoede</small>"]
+        GF["Gemini Flash<br/><small>Rest stop descriptions<br/>+ Google Search grounding</small>"]
+        IM["Imagen 4<br/><small>Scenic background<br/>generation</small>"]
+    end
+
+    subgraph SIMULATION["Two-Session Simulation"]
+        BS["Betty Session<br/><small>Gemini Live</small>"]
+        DS["Driver Persona<br/><small>Gemini Live (Puck)<br/>Configurable mood<br/>+ cabin noise</small>"]
+        BS <-->|"Audio 24kHz ↔ 16kHz<br/>resampled"| DS
+    end
+
+    subgraph CLIENTS["Browser Clients"]
+        DASH["Fleet Manager Dashboard<br/><small>Real-time monitoring<br/>Trigger controls<br/>Live transcription<br/>Visual cards</small>"]
+        PHONE["Driver Phone<br/><small>Accept/reject calls<br/>Audio streaming<br/>Card display</small>"]
+        DEMO["Interactive Demo<br/><small>6-page guided tour<br/>Live API calls</small>"]
+    end
+
+    FC -->|"Event"| TE
+    TM -->|"Event"| TE
+    BT -->|"Warning"| TE
+    TE -->|"Risk score"| CM
+    CM -->|"Initiate call"| PM
+    PM -->|"System prompt"| GL
+    VF -->|"JPEG frames"| GL
+    MEM -->|"Memory summary"| PM
+    GL <-->|"Voice + tool calls"| BT2
+    BT2 -->|"Save summary"| MEM
+    BT2 -->|"Generate card"| CG
+    CG -->|"Location lookup"| GF
+    CG -->|"Background image"| IM
+    CM <-->|"WebSocket"| DASH
+    CM <-->|"WebSocket"| PHONE
+    CM <-->|"WebSocket"| DEMO
+    CG -->|"PNG card"| DASH
+    CG -->|"PNG card"| PHONE
+    GL <-->|"Audio stream"| PHONE
+    SIMULATION -.->|"Simulated calls<br/>for demo"| CM
+
+    classDef google fill:#1a3a5c,stroke:#3b82f6,color:#93c5fd
+    classDef backend fill:#1e293b,stroke:#334155,color:#e2e8f0
+    classDef truck fill:#2d1b0e,stroke:#d97706,color:#fcd34d
+    classDef client fill:#1a2e1a,stroke:#22c55e,color:#86efac
+    classDef sim fill:#2d1a2d,stroke:#a855f7,color:#d8b4fe
+
+    class GL,GF,IM google
+    class TE,CM,VF,PM,BT2,MEM,CG backend
+    class FC,TM,BT truck
+    class DASH,PHONE,DEMO client
+    class BS,DS sim
