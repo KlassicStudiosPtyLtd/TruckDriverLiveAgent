@@ -131,6 +131,19 @@ async def handle_driver_call(
         except Exception:
             pass
 
+    # Input transcript callback: forward driver's speech to browser and dashboard
+    async def on_input_text(text: str):
+        try:
+            await ws.send_json({"type": "transcript", "speaker": "driver", "text": text})
+            await call_manager.broadcast_to_dashboard({
+                "type": "transcript",
+                "driver_id": driver_id,
+                "speaker": "driver",
+                "text": text,
+            })
+        except Exception:
+            pass
+
     # Create Gemini session with tools
     session = GeminiLiveSession(
         system_prompt=system_prompt,
@@ -139,6 +152,7 @@ async def handle_driver_call(
         tool_handler=handle_tool_call,
         on_audio=on_audio,
         on_text=on_text,
+        on_input_text=on_input_text,
         on_turn_complete=on_turn_complete,
         on_interrupted=on_interrupted,
     )
@@ -159,6 +173,14 @@ async def handle_driver_call(
                     await asyncio.sleep(0.1)
                 logger.info("Video frames injected")
 
+        # For driver-initiated calls, prompt Betty to greet immediately
+        # (the real user is already on the line — don't wait for them to speak first)
+        if trigger_type == "driver_initiated":
+            await session.send_text(
+                "The driver just called you. Answer the phone now with a warm greeting."
+            )
+            logger.info("Prompted Betty to greet driver-initiated caller")
+
         await ws.send_json({"type": "call_connected", "call_id": call.call_id})
         await call_manager.broadcast_to_dashboard({
             "type": "call_started",
@@ -168,6 +190,8 @@ async def handle_driver_call(
         })
 
         # Receive audio from browser and forward to Gemini
+        audio_bytes_received = 0
+        audio_chunks_received = 0
         while True:
             message = await ws.receive()
 
@@ -175,6 +199,13 @@ async def handle_driver_call(
                 break
 
             if "bytes" in message and message["bytes"]:
+                audio_bytes_received += len(message["bytes"])
+                audio_chunks_received += 1
+                if audio_chunks_received == 1:
+                    logger.info("First audio chunk from browser: %d bytes", len(message["bytes"]))
+                elif audio_chunks_received % 50 == 0:
+                    logger.info("Audio from browser: %d chunks, %d KB total",
+                                audio_chunks_received, audio_bytes_received // 1024)
                 await session.send_audio(message["bytes"])
 
             elif "text" in message:
@@ -187,7 +218,8 @@ async def handle_driver_call(
                     pass
 
     except WebSocketDisconnect:
-        logger.info("Driver %s disconnected", driver_id)
+        logger.info("Driver %s disconnected (received %d audio chunks, %d KB)",
+                     driver_id, audio_chunks_received, audio_bytes_received // 1024)
     except Exception:
         logger.exception("Error in call handler for driver %s", driver_id)
     finally:

@@ -32,26 +32,34 @@
     </header>
 
     <div class="container">
-        <!-- Quick Call -->
+        <!-- Quick Call + Mode Selector -->
         <div class="card full-width" id="card-quick-call" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(99, 102, 241, 0.3);">
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
-                <div>
-                    <h2 style="margin:0 0 0.25rem 0;">Talk to Betty</h2>
-                    <div style="font-size:0.85rem; color:var(--text-muted);">
-                        Start a simulated conversation — an AI driver persona will chat with Betty. Select a driver below to change who she calls.
-                    </div>
-                </div>
-                <div class="btn-group" style="margin:0;">
-                    <button class="btn btn-primary" onclick="quickCallBetty('companion_check_in')" style="font-size:0.95rem; padding:0.6rem 1.25rem;">
-                        Companion Check-in
-                    </button>
-                    <button class="btn btn-warning" onclick="quickCallBetty('fatigue_camera')" style="font-size:0.95rem; padding:0.6rem 1.25rem;">
-                        Fatigue Event
-                    </button>
-                    <button class="btn btn-success" onclick="quickCallBetty('driver_initiated')" style="font-size:0.95rem; padding:0.6rem 1.25rem;">
-                        Driver Calls Betty
-                    </button>
-                </div>
+            <h2 style="margin:0 0 0.75rem 0; color:#f1f5f9;">Talk to Betty</h2>
+            <!-- Mode selector tabs -->
+            <div class="mode-selector">
+                <button class="mode-tab active" id="mode-sim" onclick="setMode('sim')">
+                    Simulated (AI Driver)
+                </button>
+                <button class="mode-tab" id="mode-mic" onclick="setMode('mic')">
+                    Live Mic (You Talk)
+                </button>
+            </div>
+            <div class="mode-description" id="mode-description">
+                An AI driver persona chats with Betty. No mic needed — great for demos.
+            </div>
+            <!-- Hidden checkbox for backward compat -->
+            <input type="checkbox" id="simulate-toggle" checked style="display:none;">
+            <!-- Quick call buttons -->
+            <div class="btn-group" style="margin:0;">
+                <button class="btn btn-primary" onclick="quickCallBetty('companion_check_in')" style="font-size:0.95rem; padding:0.6rem 1.25rem;">
+                    Companion Check-in
+                </button>
+                <button class="btn btn-warning" onclick="quickCallBetty('fatigue_camera')" style="font-size:0.95rem; padding:0.6rem 1.25rem;">
+                    Fatigue Event
+                </button>
+                <button class="btn btn-success" onclick="quickCallBetty('driver_initiated')" style="font-size:0.95rem; padding:0.6rem 1.25rem;">
+                    Driver Calls Betty
+                </button>
             </div>
         </div>
 
@@ -64,19 +72,40 @@
         <!-- Call Status -->
         <div class="card" id="card-call-status">
             <h2>Call Status</h2>
-            <div class="call-timer" id="call-timer">00:00</div>
-            <div style="text-align:center; margin-bottom:1rem;">
-                <span class="status-badge status-idle" id="call-status-badge">
-                    <span class="dot dot-idle"></span> No active call
-                </span>
+
+            <!-- Normal call status (shown when no ringing overlay) -->
+            <div id="call-status-normal">
+                <div class="call-timer" id="call-timer">00:00</div>
+                <div style="text-align:center; margin-bottom:1rem;">
+                    <span class="status-badge status-idle" id="call-status-badge">
+                        <span class="dot dot-idle"></span> No active call
+                    </span>
+                </div>
+                <div id="call-info" style="font-size:0.85rem; color:var(--text-muted); text-align:center;">
+                    Select a driver and trigger an event to initiate a call.
+                </div>
+                <!-- Mic level indicator (shown during live mic calls) -->
+                <div id="mic-level" style="display:none; margin-top:1rem;">
+                    <div class="audio-level" style="margin:0 auto;">
+                        <div class="audio-level-bar" id="dashboard-audio-level"></div>
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:0.25rem;">Mic active</div>
+                </div>
+                <div style="text-align:center; margin-top:1rem;">
+                    <button class="btn btn-danger" id="btn-end-call" style="display:none;" onclick="endCall()">
+                        End Call
+                    </button>
+                </div>
             </div>
-            <div id="call-info" style="font-size:0.85rem; color:var(--text-muted); text-align:center;">
-                Select a driver and trigger an event to initiate a call.
-            </div>
-            <div style="text-align:center; margin-top:1rem;">
-                <button class="btn btn-danger" id="btn-end-call" style="display:none;" onclick="endCall()">
-                    End Call
-                </button>
+
+            <!-- Ringing overlay (shown when Betty is calling in live mic mode) -->
+            <div id="ringing-overlay" style="display:none; text-align:center; padding:1rem 0;">
+                <div class="dashboard-avatar ringing" id="dashboard-avatar">B</div>
+                <div class="ringing-text">Betty is calling...</div>
+                <div class="ringing-btn-row">
+                    <button class="call-btn btn-decline" onclick="declineIncoming()" title="Decline">&#x2716;</button>
+                    <button class="call-btn btn-accept" onclick="answerIncoming()" title="Answer">&#x260E;</button>
+                </div>
             </div>
         </div>
 
@@ -149,7 +178,7 @@
                 </div>
             </div>
 
-            <div class="trigger-section">
+            <div class="trigger-section" id="persona-section">
                 <h3>Driver Persona (Simulation)</h3>
                 <div class="trigger-row">
                     <select id="persona-preset" style="flex:1;" onchange="applyPreset()">
@@ -171,18 +200,6 @@
                 </div>
             </div>
 
-            <div class="trigger-section">
-                <div style="display:flex; align-items:center; gap:0.75rem;">
-                    <label class="toggle">
-                        <input type="checkbox" id="simulate-toggle" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                    <div>
-                        <div style="font-weight:600; font-size:0.9rem;">Simulation Mode</div>
-                        <div style="font-size:0.8rem; color:var(--text-muted);">AI plays the driver — no mic needed</div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Shift Simulation -->

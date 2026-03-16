@@ -8,6 +8,62 @@ let callTimerInterval = null;
 let callStartTime = null;
 let dashboardWs = null;
 
+// --- Mode state ---
+let dashboardMode = 'sim'; // 'sim' or 'mic'
+let pendingLiveCall = null; // { driverId, triggerType } when ringing
+
+function setMode(mode) {
+  dashboardMode = mode;
+  document.getElementById('simulate-toggle').checked = (mode === 'sim');
+  document.getElementById('mode-sim').classList.toggle('active', mode === 'sim');
+  document.getElementById('mode-mic').classList.toggle('active', mode === 'mic');
+  document.getElementById('mode-description').textContent = mode === 'sim'
+    ? 'An AI driver persona chats with Betty. No mic needed — great for demos.'
+    : 'YOU talk to Betty using your microphone. Chrome will ask for permission.';
+  const personaSection = document.getElementById('persona-section');
+  if (personaSection) personaSection.style.display = mode === 'sim' ? '' : 'none';
+}
+
+// --- Ringing / Answer flow (live mic mode) ---
+
+function showRingingUI(driverId, triggerType) {
+  pendingLiveCall = { driverId, triggerType };
+  document.getElementById('ringing-overlay').style.display = 'block';
+  document.getElementById('call-status-normal').style.display = 'none';
+  ringAudio.currentTime = 0;
+  ringAudio.play().catch(() => {});
+  addLocalLog('CALL', `Betty is calling (${triggerType}) — click Answer to connect mic`);
+}
+
+async function answerIncoming() {
+  if (!pendingLiveCall) return;
+  const { driverId } = pendingLiveCall;
+  // Hide ringing UI immediately
+  document.getElementById('ringing-overlay').style.display = 'none';
+  document.getElementById('call-status-normal').style.display = '';
+  ringAudio.pause();
+  ringAudio.currentTime = 0;
+  document.getElementById('mic-level').style.display = 'block';
+  // Connect mic — keep pendingLiveCall until WS is open (guards ring sound)
+  try {
+    await startLiveMicCall(driverId);
+  } catch (e) {
+    console.error('Failed to answer call:', e);
+    addLocalLog('ERROR', `Failed to answer: ${e.message}`);
+  }
+  pendingLiveCall = null;
+}
+
+function declineIncoming() {
+  pendingLiveCall = null;
+  document.getElementById('ringing-overlay').style.display = 'none';
+  document.getElementById('call-status-normal').style.display = '';
+  ringAudio.pause();
+  ringAudio.currentTime = 0;
+  addLocalLog('CALL', 'Incoming call declined');
+  refreshStatus();
+}
+
 // --- Call sound effects ---
 const ringAudio = new Audio('/sfx/ring.mp3');
 ringAudio.loop = true;
@@ -107,6 +163,14 @@ async function startLiveMicCall(driverId) {
         if (liveCallWs && liveCallWs.readyState === WebSocket.OPEN) {
           liveCallWs.send(event.data);
         }
+        // Update mic level indicator
+        const int16 = new Int16Array(event.data);
+        let sumSq = 0;
+        for (let i = 0; i < int16.length; i++) sumSq += (int16[i] / 32768) ** 2;
+        const rms = Math.sqrt(sumSq / int16.length);
+        const level = Math.min(100, rms * 500);
+        const bar = document.getElementById('dashboard-audio-level');
+        if (bar) bar.style.width = level + '%';
       } else if (event.data && event.data.type === 'vad') {
         if (event.data.speaking) {
           clearPlayback();
@@ -116,16 +180,24 @@ async function startLiveMicCall(driverId) {
 
     source.connect(liveWorkletNode);
 
-    // Connect call WebSocket
+    // Connect call WebSocket — wrap in promise so caller can await connection
     const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
     const url = `${protocol}//${location.host}/call/${driverId}`;
     liveCallWs = new WebSocket(url);
     liveCallWs.binaryType = 'arraybuffer';
 
-    liveCallWs.onopen = () => {
-      addLocalLog('CALL', `Live mic call connected for ${driverId}`);
-      initPlayback();
-    };
+    await new Promise((resolve, reject) => {
+      liveCallWs.onopen = () => {
+        addLocalLog('CALL', `Live mic call connected for ${driverId}`);
+        initPlayback();
+        resolve();
+      };
+
+      liveCallWs.onerror = (e) => {
+        console.error('Live call WS error:', e);
+        reject(new Error('WebSocket connection failed'));
+      };
+    });
 
     liveCallWs.onmessage = (event) => {
       if (event.data instanceof ArrayBuffer) {
@@ -148,11 +220,6 @@ async function startLiveMicCall(driverId) {
       stopLiveMicCall();
       addLocalLog('CALL', 'Live mic call ended');
       setTimeout(refreshStatus, 500);
-    };
-
-    liveCallWs.onerror = (e) => {
-      console.error('Live call WS error:', e);
-      stopLiveMicCall();
     };
 
   } catch (err) {
@@ -182,6 +249,11 @@ function stopLiveMicCall() {
   }
   liveCallWs = null;
   stopPlayback();
+  // Clean up mic level UI
+  const micLevel = document.getElementById('mic-level');
+  if (micLevel) micLevel.style.display = 'none';
+  const bar = document.getElementById('dashboard-audio-level');
+  if (bar) bar.style.width = '0%';
 }
 
 function connectDashboardWs() {
@@ -205,15 +277,26 @@ function connectDashboardWs() {
       // Stop ringing once conversation begins
       ringAudio.pause();
       ringAudio.currentTime = 0;
-      addTranscript(data.speaker, data.text, data.driver_id);
+      // Skip if live call WS is active (it delivers transcripts directly)
+      if (!liveCallWs) {
+        addTranscript(data.speaker, data.text, data.driver_id);
+      }
     } else if (data.type === 'call_started') {
       addLocalLog('CALL', `Call started with ${data.driver_id} (trigger: ${data.trigger_type})${data.simulated ? ' [SIM]' : ''}`);
-      ringAudio.currentTime = 0;
-      ringAudio.play().catch(() => {});
+      // Only play ring sound if NOT in a live mic call (pending or active)
+      if (!pendingLiveCall && !liveCallWs) {
+        ringAudio.currentTime = 0;
+        ringAudio.play().catch(() => {});
+      } else {
+        // Live mic call is connecting — make sure ring is stopped
+        ringAudio.pause();
+        ringAudio.currentTime = 0;
+      }
       initPlayback();
       refreshStatus();
     } else if (data.type === 'call_ended') {
       wsTranscriptActive = false;
+      if (pendingLiveCall) declineIncoming();
       addLocalLog('CALL', `Call ended with ${data.driver_id}`);
       ringAudio.pause();
       ringAudio.currentTime = 0;
@@ -366,8 +449,8 @@ async function sendTrigger(triggerType) {
     addLocalLog('TRIGGER', `${triggerType} sent for ${driverId}${simulate ? '' : ' [LIVE MIC]'}`);
 
     if (!simulate && data.status === 'call_initiated') {
-      // Non-simulated: connect mic from dashboard
-      await startLiveMicCall(driverId);
+      // Non-simulated: show ringing UI, user clicks Answer to connect mic
+      showRingingUI(driverId, triggerType);
     }
 
     setTimeout(refreshStatus, 500);
@@ -403,8 +486,8 @@ async function quickCallBetty(triggerType) {
     addLocalLog('CALL', `Quick call: ${triggerType} for ${driverId}${simulate ? ' [SIM]' : ' [LIVE MIC]'}`);
 
     if (!simulate) {
-      // Non-simulated: connect mic from dashboard
-      await startLiveMicCall(driverId);
+      // Non-simulated: show ringing UI for incoming calls
+      showRingingUI(driverId, triggerType);
     }
 
     setTimeout(refreshStatus, 500);
@@ -425,7 +508,8 @@ async function driverCallsBetty() {
     addLocalLog('CALL', `Driver ${driverId} calling Betty${simulate ? ' [SIM]' : ' [LIVE MIC]'}`);
 
     if (!simulate) {
-      // Non-simulated: connect mic from dashboard
+      // User-initiated: connect mic immediately (no ringing)
+      document.getElementById('mic-level').style.display = 'block';
       await startLiveMicCall(driverId);
     }
 
@@ -436,6 +520,10 @@ async function driverCallsBetty() {
 }
 
 async function endCall() {
+  // Clean up ringing state if active
+  if (pendingLiveCall) {
+    declineIncoming();
+  }
   // Stop live mic call if active
   if (liveCallWs) {
     stopLiveMicCall();

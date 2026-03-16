@@ -58,6 +58,25 @@ The result is a full, natural conversation that anyone can watch just by clickin
 
 Getting the audio bridging right was harder than expected. The resampling has to be precise — any drift and the conversation degrades. Turn-taking management was critical to prevent crosstalk. And mixing in continuous cabin noise (engine and road sounds) makes it sound like a real phone call from a truck cab.
 
+## Natural Interruptions
+
+Real phone conversations aren't polite turn-by-turn exchanges. People talk over each other — especially a grumpy truck driver who's been told to pull over for the third time.
+
+Betty handles this naturally. When a simulated driver persona has the `interrupts` trait, the system lets Betty speak for 1.5–3 seconds, then breaks mid-sentence and has the driver cut in with something abrupt:
+
+> *Betty: "I can see you on the camera, Graeme. Your eyes are drooping, you're—"*
+> *Driver: "Nah, listen, I just had a blue with dispatch, they don't get it."*
+
+The driver's audio is streamed directly into Betty's Gemini session, triggering a real server-side barge-in. Betty stops generating, processes what the driver said, and her next response addresses the interruption naturally — she doesn't repeat herself or continue from where she was cut off.
+
+This required solving a few problems:
+- **No dead air.** The driver's response has to start immediately after the break, not after a multi-second drain of Betty's buffered output.
+- **Stale content flushing.** If Betty was mid-word when interrupted (e.g. "it's"), the leftover ("Betty!") would leak into her next response. A brief post-interrupt flush clears this without perceptible silence.
+- **Session stability.** Too many rapid interrupts can destabilise a Gemini Live session, so interrupts are capped at 3 per call with the first one guaranteed.
+- **Goodbye detection.** Without it, both sides would enter an endless loop of Australian farewells — "See ya." "Hooroo." "Cheers." "Take care." — which is very Australian but not a great demo. The system detects when both sides have said goodbye and ends the call.
+
+The result is conversations that sound like real phone calls, not scripted dialogues.
+
 ## Cross-Call Memory
 
 One of the features I'm most proud of is Betty's shift memory. Each driver's conversation history is encrypted with **AES-256-GCM** using per-driver keys derived via **HKDF**. The memory auto-expires after 14 hours (one shift).
@@ -83,7 +102,6 @@ Key lessons:
 
 This is a hackathon prototype, but the path to real-world deployment is clear:
 - Connect to a telephone service (eg. Twilio) so that real world conversations can take place
-- Connect the dashboard and browser to all access to the microphone so that we can interact with Betty via the web
 - Connect to actual telematics APIs (Seeing Machines, Lytx) instead of mock data
 - Multi-language support for Australia's diverse trucking workforce
 - Shift-over-shift wellness trending to spot patterns across weeks

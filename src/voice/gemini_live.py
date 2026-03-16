@@ -27,6 +27,7 @@ class GeminiLiveSession:
         tool_handler: Optional[Callable] = None,
         on_audio: Optional[Callable[[bytes], Any]] = None,
         on_text: Optional[Callable[[str], Any]] = None,
+        on_input_text: Optional[Callable[[str], Any]] = None,
         on_turn_complete: Optional[Callable[[], Any]] = None,
         on_interrupted: Optional[Callable[[], Any]] = None,
     ):
@@ -37,6 +38,7 @@ class GeminiLiveSession:
         self.tool_handler = tool_handler
         self.on_audio = on_audio
         self.on_text = on_text
+        self.on_input_text = on_input_text
         self.on_turn_complete = on_turn_complete
         self.on_interrupted = on_interrupted
         self._session = None
@@ -62,10 +64,11 @@ class GeminiLiveSession:
                 parts=[types.Part(text=self.system_prompt)]
             ),
             output_audio_transcription=types.AudioTranscriptionConfig(),
+            input_audio_transcription=types.AudioTranscriptionConfig(),
             realtime_input_config=types.RealtimeInputConfig(
                 automatic_activity_detection=types.AutomaticActivityDetection(
-                    start_of_speech_sensitivity=types.StartSensitivity.START_SENSITIVITY_LOW,
-                    end_of_speech_sensitivity=types.EndSensitivity.END_SENSITIVITY_HIGH,
+                    start_of_speech_sensitivity=types.StartSensitivity.START_SENSITIVITY_HIGH,
+                    end_of_speech_sensitivity=types.EndSensitivity.END_SENSITIVITY_LOW,
                     silence_duration_ms=500,
                     prefix_padding_ms=200,
                 ),
@@ -150,11 +153,17 @@ class GeminiLiveSession:
                                     if self.on_audio:
                                         await _maybe_await(self.on_audio(part.inline_data.data))
 
-                        # Transcript comes via output_transcription, not part.text
+                        # Betty's speech transcript
                         ot = getattr(server_content, 'output_transcription', None)
                         if ot and ot.text:
                             if self.on_text:
                                 await _maybe_await(self.on_text(ot.text))
+
+                        # Driver's speech transcript (input audio transcription)
+                        it = getattr(server_content, 'input_transcription', None)
+                        if it and it.text:
+                            if self.on_input_text:
+                                await _maybe_await(self.on_input_text(it.text))
 
                         if server_content.turn_complete:
                             if self.on_turn_complete:
