@@ -6,9 +6,31 @@
 const TOTAL_PAGES = 7;
 const DRIVER_ID = 'DRV-001';  // Dazza for demos
 let currentPage = 1;
+let demoUserName = '';  // User's name for Betty to use
 
 // Track call state per page
 const pageState = {};
+
+// --- Name entry ---
+
+function showNameEntry() {
+  document.getElementById('name-entry').style.display = 'block';
+  document.getElementById('page1-nav').style.display = 'none';
+  const input = document.getElementById('demo-user-name');
+  input.value = demoUserName;
+  input.focus();
+}
+
+function startDemoWithName() {
+  const input = document.getElementById('demo-user-name');
+  demoUserName = input.value.trim() || 'Graeme';
+  sessionStorage.setItem('betty-demo-name', demoUserName);
+  goToPage(2);
+}
+
+// Restore name from session storage
+const savedName = sessionStorage.getItem('betty-demo-name');
+if (savedName) demoUserName = savedName;
 
 // Sound effects
 let ringAudio = null;
@@ -465,7 +487,7 @@ async function triggerInterrupt() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        driver_id: DRIVER_ID,
+        driver_id: DRIVER_ID, driver_name: demoUserName || undefined,
         trigger_type: 'fatigue_camera',
         severity: 'high',
         fatigue_event_type: 'droopy_eyes',
@@ -499,7 +521,7 @@ async function triggerFatigue() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        driver_id: DRIVER_ID,
+        driver_id: DRIVER_ID, driver_name: demoUserName || undefined,
         trigger_type: 'fatigue_camera',
         severity: 'high',
         fatigue_event_type: 'droopy_eyes',
@@ -529,7 +551,7 @@ async function triggerEscalation() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        driver_id: DRIVER_ID,
+        driver_id: DRIVER_ID, driver_name: demoUserName || undefined,
         trigger_type: 'fatigue_camera',
         severity: 'high',
         fatigue_event_type: 'head_nod',
@@ -561,7 +583,7 @@ async function triggerMemoryCall1() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        driver_id: DRIVER_ID,
+        driver_id: DRIVER_ID, driver_name: demoUserName || undefined,
         trigger_type: 'companion_check_in',
         simulate: true,
       }),
@@ -595,7 +617,7 @@ async function triggerMemoryCall2() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        driver_id: DRIVER_ID,
+        driver_id: DRIVER_ID, driver_name: demoUserName || undefined,
         trigger_type: 'fatigue_camera',
         severity: 'medium',
         fatigue_event_type: 'yawning',
@@ -647,7 +669,7 @@ async function generateDemoCard(cardType, scenario) {
     if (data.image_url) {
       handleCard({
         card_type: data.card_type || cardType,
-        driver_id: DRIVER_ID,
+        driver_id: DRIVER_ID, driver_name: demoUserName || undefined,
         image_url: data.image_url,
       });
     }
@@ -756,7 +778,7 @@ async function pollTranscripts() {
         handleTranscript({
           speaker: line.speaker,
           text: line.text,
-          driver_id: DRIVER_ID,
+          driver_id: DRIVER_ID, driver_name: demoUserName || undefined,
         });
       }
       lastTranscriptCounts[key] = data.transcript.length;

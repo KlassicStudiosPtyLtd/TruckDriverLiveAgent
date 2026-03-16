@@ -113,6 +113,7 @@ async def assess_and_call(
     trigger_type: str,
     trigger_data: dict,
     event_log: list[dict],
+    driver_name_override: str = None,
 ) -> dict:
     """Assess risk and initiate call if warranted."""
     risk = assess_risk(trigger_type, trigger_data, driver_id)
@@ -121,7 +122,8 @@ async def assess_and_call(
         return {"status": "no_call", "risk": risk}
 
     # Initiate call
-    call = call_manager.initiate_call(driver_id, trigger_type, trigger_data)
+    call = call_manager.initiate_call(driver_id, trigger_type, trigger_data,
+                                      driver_name_override=driver_name_override)
 
     # Notify driver's browser
     notified = await call_manager.notify_driver(driver_id, {

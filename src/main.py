@@ -67,6 +67,7 @@ class TriggerRequest(BaseModel):
     persona_situation: Optional[str] = None
     persona_resistance: Optional[str] = None
     persona_interrupts: Optional[bool] = None
+    driver_name: Optional[str] = None  # Override driver's first name for Betty's prompt
 
 
 @app.post("/api/triggers/trigger")
@@ -119,6 +120,7 @@ async def trigger_event(req: TriggerRequest):
             trigger_data=trigger_data,
             call_manager=call_manager,
             persona=persona if persona else None,
+            driver_name_override=req.driver_name,
         ))
         return {
             "status": "simulation_started",
@@ -134,6 +136,7 @@ async def trigger_event(req: TriggerRequest):
         trigger_type=req.trigger_type,
         trigger_data=trigger_data,
         event_log=event_log,
+        driver_name_override=req.driver_name,
     )
 
     return result
@@ -142,7 +145,8 @@ async def trigger_event(req: TriggerRequest):
 # --- Driver-initiated call ---
 
 @app.post("/api/call/driver-initiate/{driver_id}")
-async def driver_initiate_call(driver_id: str, simulate: bool = False):
+async def driver_initiate_call(driver_id: str, simulate: bool = False,
+                               driver_name: Optional[str] = None):
     """Driver initiates a call to Betty."""
     from src.data.mock_fleet import get_driver
 
@@ -159,11 +163,13 @@ async def driver_initiate_call(driver_id: str, simulate: bool = False):
             trigger_type="driver_initiated",
             trigger_data=trigger_data,
             call_manager=call_manager,
+            driver_name_override=driver_name,
         ))
         return {"status": "simulation_started", "driver_id": driver_id}
 
     # Real call: create pending call so ws_handler can pick it up
-    call_manager.initiate_call(driver_id, "driver_initiated", trigger_data)
+    call_manager.initiate_call(driver_id, "driver_initiated", trigger_data,
+                               driver_name_override=driver_name)
     return {"status": "call_ready", "driver_id": driver_id}
 
 
@@ -501,13 +507,13 @@ async def blog_post(slug: str):
 
 @app.get("/")
 async def root():
-    return FileResponse(os.path.join(STATIC_DIR, "dashboard.html"))
-
-
-@app.get("/demo")
-async def demo():
-    """Interactive guided demo for judges."""
     return FileResponse(os.path.join(STATIC_DIR, "demo.html"))
+
+
+@app.get("/dashboard")
+async def dashboard():
+    """Fleet manager dashboard."""
+    return FileResponse(os.path.join(STATIC_DIR, "dashboard.html"))
 
 
 if __name__ == "__main__":

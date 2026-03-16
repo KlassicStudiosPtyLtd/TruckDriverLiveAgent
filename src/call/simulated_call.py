@@ -166,13 +166,14 @@ def _resample_24k_to_16k(pcm_24k: bytes) -> bytes:
 
 
 def _build_driver_persona(driver: dict, trigger_type: str, trigger_data: dict,
-                          persona: dict | None = None) -> str:
+                          persona: dict | None = None,
+                          driver_name_override: str = None) -> str:
     """Build a short system prompt for the simulated driver.
 
     persona is an optional dict with keys: mood, situation, resistance.
     If not provided, a random preset is chosen.
     """
-    name = driver["first_name"]
+    name = driver_name_override or driver["first_name"]
     route = driver.get("current_route", "a long haul route")
 
     # --- Trigger-specific context (what just happened) ---
@@ -544,6 +545,7 @@ async def run_simulated_call(
     trigger_data: dict,
     call_manager: CallManager,
     persona: dict | None = None,
+    driver_name_override: str = None,
 ) -> dict:
     """Run a fully simulated call between Betty and a driver persona."""
     driver = get_driver(driver_id)
@@ -554,13 +556,15 @@ async def run_simulated_call(
     if not api_key:
         return {"error": "GEMINI_API_KEY not set"}
 
+    driver_name = driver_name_override or driver["first_name"]
+
     hours = get_driver_hours(driver_id)
     events = get_recent_events(driver_id)
     event_summary = f"{len(events)} recent events" if events else None
     memory_summary = get_memory_summary(driver_id)
 
     betty_prompt = build_system_prompt(
-        driver_name=driver["first_name"],
+        driver_name=driver_name,
         trigger_type=trigger_type,
         route=driver.get("current_route"),
         hours_driven=hours["hours_driven_continuous"] if hours else None,
@@ -576,7 +580,8 @@ async def run_simulated_call(
         next_rest_area_km=hours.get("next_rest_area_km") if hours else None,
     )
 
-    driver_persona = _build_driver_persona(driver, trigger_type, trigger_data, persona)
+    driver_persona = _build_driver_persona(driver, trigger_type, trigger_data, persona,
+                                              driver_name_override=driver_name)
     persona_interrupts = bool(persona and persona.get("interrupts"))
 
     # Track call + cancellation

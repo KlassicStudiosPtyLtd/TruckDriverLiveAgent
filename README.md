@@ -8,7 +8,7 @@
 
 Built for the [Gemini Live Agent Challenge](https://geminiliveagentchallenge.devpost.com/) hackathon.
 
-**[Live Demo](https://bettyai.klassicstudios.com/)** · **[Interactive Demo](https://bettyai.klassicstudios.com/demo)** · **[DevPost Submission](https://geminiliveagentchallenge.devpost.com/)**
+**[Live Demo](https://bettyai.klassicstudios.com/)** · **[Dashboard](https://bettyai.klassicstudios.com/dashboard)** · **[DevPost Submission](https://geminiliveagentchallenge.devpost.com/)**
 
 ---
 
@@ -83,9 +83,12 @@ For demos, Betty and a simulated driver persona run as **two parallel Gemini Liv
 - **Visual cards** — Rest stop recommendations (Gemini Flash + Search + Imagen 4 backgrounds), shift wellness summaries, incident reports
 - **Smart escalation** — If the driver refuses to rest, Betty escalates to the fleet manager with an incident report card
 - **Risk scoring** — Events scored 0-1 with type modifiers, severity weighting, and consecutive event escalation
+- **Natural interruptions** — Simulated drivers cut Betty off mid-sentence with realistic barge-in; Betty adapts naturally
+- **Live mic mode** — Talk to Betty directly from the dashboard using your microphone with answer/decline call flow
+- **Personalised name** — Enter your name and Betty uses it throughout the conversation
 - **Driver personas** — Configurable mood, situation, and resistance level for simulation
 - **Cabin noise** — Continuous in-cab road noise mixed into audio for realism
-- **Live transcription** — Real-time conversation text on the dashboard
+- **Live transcription** — Real-time conversation text on the dashboard with input audio transcription
 
 ### Betty's Tools (function calling mid-conversation)
 
@@ -104,11 +107,12 @@ For demos, Betty and a simulated driver persona run as **two parallel Gemini Liv
 
 The fastest way to test Betty:
 
-1. **Open the Interactive Demo** → [bettyai.klassicstudios.com/demo](https://bettyai.klassicstudios.com/demo)
-2. Follow the 6-page guided walkthrough — each page triggers a real Gemini Live API call
-3. No microphone needed — a simulated AI driver responds automatically
+1. **Open the Interactive Demo** → [bettyai.klassicstudios.com](https://bettyai.klassicstudios.com/)
+2. Enter your name — Betty will use it during conversations
+3. Follow the 6-page guided walkthrough — each page triggers a real Gemini Live API call
+4. No microphone needed — a simulated AI driver responds automatically
 
-Or explore the **Fleet Manager Dashboard** → [bettyai.klassicstudios.com](https://bettyai.klassicstudios.com/)
+Or explore the **Fleet Manager Dashboard** → [bettyai.klassicstudios.com/dashboard](https://bettyai.klassicstudios.com/dashboard) — switch to Live Mic mode to talk to Betty directly
 
 ---
 
@@ -157,8 +161,8 @@ python -m src.main
 
 | URL | What to test |
 |-----|-------------|
-| `http://localhost:8000/demo` | **Interactive Demo** — 6-page guided walkthrough with live API calls. Start here. |
-| `http://localhost:8000/` | **Dashboard** — Select a driver, send a fatigue event, watch Betty call and converse in real-time. Try the Shift Simulation for a compressed 14-hour shift with multiple events. |
+| `http://localhost:8000/` | **Interactive Demo** — 6-page guided walkthrough with live API calls. Start here. |
+| `http://localhost:8000/dashboard` | **Dashboard** — Select a driver, send a fatigue event, watch Betty call and converse in real-time. Switch to Live Mic mode to talk to Betty directly. Try the Shift Simulation for a compressed 14-hour shift with multiple events. |
 | `http://localhost:8000/static/driver.html?id=DRV-001` | **Driver Phone** — See what the driver sees. Open alongside the dashboard in a second tab. |
 
 ### Step 6: Things to try
@@ -168,6 +172,8 @@ python -m src.main
 3. **Shift simulation** — Click "Start Shift Simulation" with 5 events. Betty handles escalating triggers across multiple calls with continuous memory.
 4. **Card generation** — Use the Card Generator panel to create rest stop cards (uses Gemini Flash + Google Search + Imagen 4), wellness summaries, and incident reports.
 5. **Driver calls Betty** — Click "Driver Calls Betty" to test the inbound call flow where the driver initiates.
+6. **Live mic mode** — On the dashboard, switch to "Live Mic (You Talk)" mode, enter your name, trigger an event, click Answer when Betty calls, and have a real conversation.
+7. **Natural interruptions** — In the demo, try the "Natural Interruption" step to see a grumpy driver cut Betty off mid-sentence.
 
 ### Step 7: Integration tests (requires API key)
 
@@ -256,9 +262,10 @@ src/
     mock_fleet.py          # Mock driver profiles, hours, events
 
 static/
-  dashboard.html/js        # Fleet manager dashboard
+  dashboard.html/js        # Fleet manager dashboard (simulated + live mic modes)
   driver.html/js           # Driver phone interface
   demo.html/js/css         # Interactive demo walkthrough
+  audio-processor.js       # AudioWorklet for mic capture + client-side VAD
   tutorial.js/css          # Dashboard guided tour
   style.css                # Shared styles
   sfx/                     # Sound effects (ring, end call, cabin noise)

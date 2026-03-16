@@ -13,11 +13,13 @@ logger = logging.getLogger(__name__)
 class PendingCall:
     """A call waiting for a driver to accept."""
 
-    def __init__(self, driver_id: str, trigger_type: str, trigger_data: dict):
+    def __init__(self, driver_id: str, trigger_type: str, trigger_data: dict,
+                 driver_name_override: str = None):
         self.call_id = str(uuid.uuid4())[:8]
         self.driver_id = driver_id
         self.trigger_type = trigger_type
         self.trigger_data = trigger_data
+        self.driver_name_override = driver_name_override
         self.created_at = datetime.now(timezone.utc)
         self.status = "pending"  # pending | ringing | connected | ended
 
@@ -32,9 +34,10 @@ class CallManager:
         self._notification_sockets: dict[str, WebSocket] = {}  # driver_id -> WS
         self._dashboard_sockets: list[WebSocket] = []
 
-    def initiate_call(self, driver_id: str, trigger_type: str, trigger_data: dict) -> PendingCall:
+    def initiate_call(self, driver_id: str, trigger_type: str, trigger_data: dict,
+                      driver_name_override: str = None) -> PendingCall:
         """Create a pending call for a driver."""
-        call = PendingCall(driver_id, trigger_type, trigger_data)
+        call = PendingCall(driver_id, trigger_type, trigger_data, driver_name_override)
         self._pending_calls[driver_id] = call
         logger.info("Call initiated: %s for driver %s (trigger=%s)", call.call_id, driver_id, trigger_type)
         return call

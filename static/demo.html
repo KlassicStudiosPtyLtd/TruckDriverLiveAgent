@@ -19,7 +19,7 @@
         <div class="demo-progress-logo"><img src="/static/images/betty_ai_logo.png" alt="Betty AI" style="height:28px; border-radius:6px; vertical-align:middle; margin-right:6px;">Betty</div>
         <div class="demo-progress-steps" id="progress-steps"></div>
         <div class="demo-step-label" id="progress-label">Introduction</div>
-        <a href="/" class="demo-btn demo-btn-outline" style="font-size:0.75rem; padding:0.3rem 0.75rem; text-decoration:none; margin-left:auto;">
+        <a href="/dashboard" class="demo-btn demo-btn-outline" style="font-size:0.75rem; padding:0.3rem 0.75rem; text-decoration:none; margin-left:auto;">
             Dashboard
         </a>
     </div>
@@ -73,9 +73,28 @@
                 All calls are simulated — an AI driver persona talks to Betty so no microphone is needed.
             </div>
 
-            <div class="demo-nav">
+            <!-- Name entry (shown after clicking Start) -->
+            <div id="name-entry" style="display:none; margin-top:1.5rem;">
+                <div class="demo-interactive" style="max-width:400px; margin:0 auto;">
+                    <h3 style="text-align:center;">What's your name?</h3>
+                    <div style="font-size:0.85rem; color:#94a3b8; text-align:center; margin-bottom:1rem;">
+                        Betty will use your name during conversations.
+                    </div>
+                    <input type="text" id="demo-user-name" placeholder="Enter your name"
+                           style="width:100%; padding:0.75rem 1rem; border-radius:10px; border:1px solid #334155;
+                                  background:#1e293b; color:#f1f5f9; font-size:1.1rem; text-align:center;"
+                           onkeydown="if(event.key==='Enter') startDemoWithName()">
+                    <div style="text-align:center; margin-top:1rem;">
+                        <button class="demo-btn demo-btn-primary" onclick="startDemoWithName()">
+                            Let's Go &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="demo-nav" id="page1-nav">
                 <div></div>
-                <button class="demo-btn demo-btn-primary" onclick="goToPage(2)">
+                <button class="demo-btn demo-btn-primary" onclick="showNameEntry()">
                     Start the Demo &rarr;
                 </button>
             </div>
@@ -392,7 +411,7 @@
                 <button class="demo-btn demo-btn-outline" onclick="goToPage(6)">&larr; Back</button>
                 <div></div>
                 <div class="demo-btn-group">
-                    <button class="demo-btn demo-btn-outline" onclick="window.location.href='/'">
+                    <button class="demo-btn demo-btn-outline" onclick="window.location.href='/dashboard'">
                         Open Full Dashboard
                     </button>
                     <button class="demo-btn demo-btn-primary" onclick="goToPage(1)">

@@ -64,6 +64,11 @@ function declineIncoming() {
   refreshStatus();
 }
 
+function getUserName() {
+  const el = document.getElementById('user-name');
+  return (el && el.value.trim()) || 'Graeme';
+}
+
 // --- Call sound effects ---
 const ringAudio = new Audio('/sfx/ring.mp3');
 ringAudio.loop = true;
@@ -428,6 +433,7 @@ async function sendTrigger(triggerType) {
     driver_id: driverId,
     trigger_type: triggerType,
     simulate: simulate,
+    driver_name: getUserName(),
     ...getPersonaPayload(),
   };
 
@@ -470,6 +476,7 @@ async function quickCallBetty(triggerType) {
     driver_id: driverId,
     trigger_type: triggerType,
     simulate: simulate,
+    driver_name: getUserName(),
     ...getPersonaPayload(),
   };
   if (triggerType === 'fatigue_camera') {
@@ -500,7 +507,8 @@ async function driverCallsBetty() {
   const driverId = document.getElementById('driver-select').value;
   const simulate = document.getElementById('simulate-toggle').checked;
   try {
-    const res = await fetch(`/api/call/driver-initiate/${driverId}?simulate=${simulate}`, {
+    const name = getUserName();
+    const res = await fetch(`/api/call/driver-initiate/${driverId}?simulate=${simulate}&driver_name=${encodeURIComponent(name)}`, {
       method: 'POST',
     });
     const data = await res.json();
@@ -927,6 +935,28 @@ async function generateCard(cardType) {
     addLocalLog('ERROR', `Card generation failed: ${e.message}`);
   }
 }
+
+// --- Cleanup on page unload (refresh / navigate away) ---
+
+window.addEventListener('beforeunload', () => {
+  // Stop live mic call
+  if (liveCallWs) {
+    stopLiveMicCall();
+  }
+  // End any active call on server
+  if (currentCallId) {
+    navigator.sendBeacon(`/dashboard/api/end-call/${currentCallId}`);
+  }
+  // Stop all audio
+  stopPlayback();
+  ringAudio.pause();
+  endCallAudio.pause();
+  // Close dashboard WS
+  if (dashboardWs) {
+    dashboardWs.onclose = null;
+    dashboardWs.close();
+  }
+});
 
 // --- Init ---
 

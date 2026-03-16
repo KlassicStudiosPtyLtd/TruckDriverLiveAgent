@@ -54,6 +54,7 @@ async def handle_driver_call(
 
     trigger_type = call.trigger_type
     trigger_data = call.trigger_data
+    driver_name = call.driver_name_override or driver["first_name"]
 
     # Build system prompt with full context + memory from previous calls
     hours = get_driver_hours(driver_id)
@@ -62,7 +63,7 @@ async def handle_driver_call(
     memory_summary = get_memory_summary(driver_id)
 
     system_prompt = build_system_prompt(
-        driver_name=driver["first_name"],
+        driver_name=driver_name,
         trigger_type=trigger_type,
         route=driver.get("current_route"),
         hours_driven=hours["hours_driven_continuous"] if hours else None,

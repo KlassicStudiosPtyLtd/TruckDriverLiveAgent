@@ -22,7 +22,7 @@
             </div>
         </div>
         <div style="margin-left:auto; display:flex; gap:0.5rem;">
-            <a href="/demo" class="btn btn-outline" style="font-size:0.8rem; color:white; border-color:rgba(255,255,255,0.4); text-decoration:none;">
+            <a href="/" class="btn btn-outline" style="font-size:0.8rem; color:white; border-color:rgba(255,255,255,0.4); text-decoration:none;">
                 Interactive Demo
             </a>
             <button class="btn btn-outline" id="btn-restart-tour" style="font-size:0.8rem; color:white; border-color:rgba(255,255,255,0.4);" onclick="startTutorial()">
@@ -49,6 +49,13 @@
             </div>
             <!-- Hidden checkbox for backward compat -->
             <input type="checkbox" id="simulate-toggle" checked style="display:none;">
+            <!-- Name input -->
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+                <label style="font-size:0.85rem; color:#94a3b8; white-space:nowrap;">Your name:</label>
+                <input type="text" id="user-name" placeholder="Graeme" value="Graeme"
+                       style="flex:1; max-width:200px; padding:0.4rem 0.75rem; border-radius:8px;
+                              border:1px solid #334155; background:#1e293b; color:#f1f5f9; font-size:0.9rem;">
+            </div>
             <!-- Quick call buttons -->
             <div class="btn-group" style="margin:0;">
                 <button class="btn btn-primary" onclick="quickCallBetty('companion_check_in')" style="font-size:0.95rem; padding:0.6rem 1.25rem;">
