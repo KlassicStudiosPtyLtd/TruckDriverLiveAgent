@@ -18,19 +18,39 @@ const endCallAudio = new Audio('/sfx/end_call.mp3');
 // --- Audio playback for simulated calls ---
 let playbackCtx = null;
 let nextPlayTime = 0;
+let activeSources = [];
 
 function initPlayback() {
   if (playbackCtx) return;
   playbackCtx = new AudioContext({ sampleRate: 24000 });
   nextPlayTime = 0;
+  activeSources = [];
 }
 
 function stopPlayback() {
+  if (activeSources) {
+    for (const src of activeSources) {
+      try { src.stop(); } catch (e) {}
+    }
+    activeSources = [];
+  }
   if (playbackCtx) {
     playbackCtx.close();
     playbackCtx = null;
   }
   nextPlayTime = 0;
+}
+
+function clearPlayback() {
+  if (activeSources) {
+    for (const src of activeSources) {
+      try { src.stop(); } catch (e) {}
+    }
+    activeSources = [];
+  }
+  if (playbackCtx) {
+    nextPlayTime = 0;
+  }
 }
 
 function playAudioChunk(arrayBuffer) {
@@ -48,7 +68,120 @@ function playAudioChunk(arrayBuffer) {
   source.buffer = buf;
   source.connect(playbackCtx.destination);
   source.start(startTime);
+
+  activeSources.push(source);
+  source.onended = () => {
+    const idx = activeSources.indexOf(source);
+    if (idx !== -1) activeSources.splice(idx, 1);
+  };
+
   nextPlayTime = startTime + buf.duration;
+}
+
+// --- Live mic call (non-simulated mode) ---
+let liveCallWs = null;
+let liveAudioCtx = null;
+let liveWorkletNode = null;
+let liveMicStream = null;
+
+async function startLiveMicCall(driverId) {
+  try {
+    // Request mic permission — this triggers Chrome's permission prompt
+    liveAudioCtx = new AudioContext({ sampleRate: 16000 });
+    liveMicStream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        sampleRate: 16000,
+        channelCount: 1,
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+      }
+    });
+
+    await liveAudioCtx.audioWorklet.addModule('/static/audio-processor.js');
+    const source = liveAudioCtx.createMediaStreamSource(liveMicStream);
+    liveWorkletNode = new AudioWorkletNode(liveAudioCtx, 'pcm-processor');
+
+    liveWorkletNode.port.onmessage = (event) => {
+      if (event.data instanceof ArrayBuffer) {
+        if (liveCallWs && liveCallWs.readyState === WebSocket.OPEN) {
+          liveCallWs.send(event.data);
+        }
+      } else if (event.data && event.data.type === 'vad') {
+        if (event.data.speaking) {
+          clearPlayback();
+        }
+      }
+    };
+
+    source.connect(liveWorkletNode);
+
+    // Connect call WebSocket
+    const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const url = `${protocol}//${location.host}/call/${driverId}`;
+    liveCallWs = new WebSocket(url);
+    liveCallWs.binaryType = 'arraybuffer';
+
+    liveCallWs.onopen = () => {
+      addLocalLog('CALL', `Live mic call connected for ${driverId}`);
+      initPlayback();
+    };
+
+    liveCallWs.onmessage = (event) => {
+      if (event.data instanceof ArrayBuffer) {
+        playAudioChunk(event.data);
+      } else {
+        const data = JSON.parse(event.data);
+        if (data.type === 'transcript') {
+          addTranscript(data.speaker || 'betty', data.text, driverId);
+        } else if (data.type === 'call_connected') {
+          addLocalLog('CALL', `Call connected: ${data.call_id}`);
+        } else if (data.type === 'interrupted') {
+          clearPlayback();
+        } else if (data.type === 'error') {
+          addLocalLog('ERROR', data.message);
+        }
+      }
+    };
+
+    liveCallWs.onclose = () => {
+      stopLiveMicCall();
+      addLocalLog('CALL', 'Live mic call ended');
+      setTimeout(refreshStatus, 500);
+    };
+
+    liveCallWs.onerror = (e) => {
+      console.error('Live call WS error:', e);
+      stopLiveMicCall();
+    };
+
+  } catch (err) {
+    console.error('Failed to start live mic call:', err);
+    addLocalLog('ERROR', `Microphone access failed: ${err.message}`);
+    alert('Could not access microphone. Please allow microphone access and try again.');
+    stopLiveMicCall();
+  }
+}
+
+function stopLiveMicCall() {
+  if (liveWorkletNode) {
+    liveWorkletNode.disconnect();
+    liveWorkletNode = null;
+  }
+  if (liveMicStream) {
+    liveMicStream.getTracks().forEach(t => t.stop());
+    liveMicStream = null;
+  }
+  if (liveAudioCtx) {
+    liveAudioCtx.close();
+    liveAudioCtx = null;
+  }
+  if (liveCallWs && liveCallWs.readyState === WebSocket.OPEN) {
+    liveCallWs.send(JSON.stringify({ type: 'hangup' }));
+    liveCallWs.close();
+  }
+  liveCallWs = null;
+  stopPlayback();
 }
 
 function connectDashboardWs() {
@@ -58,9 +191,11 @@ function connectDashboardWs() {
   dashboardWs.binaryType = 'arraybuffer';
 
   dashboardWs.onmessage = (event) => {
-    // Binary = audio PCM data
+    // Binary = audio PCM data (only play if no live mic call active)
     if (event.data instanceof ArrayBuffer) {
-      playAudioChunk(event.data);
+      if (!liveCallWs) {
+        playAudioChunk(event.data);
+      }
       return;
     }
 
@@ -78,6 +213,7 @@ function connectDashboardWs() {
       initPlayback();
       refreshStatus();
     } else if (data.type === 'call_ended') {
+      wsTranscriptActive = false;
       addLocalLog('CALL', `Call ended with ${data.driver_id}`);
       ringAudio.pause();
       ringAudio.currentTime = 0;
@@ -227,11 +363,53 @@ async function sendTrigger(triggerType) {
     });
     const data = await res.json();
     console.log('Trigger sent:', data);
-    addLocalLog('TRIGGER', `${triggerType} sent for ${driverId}`);
+    addLocalLog('TRIGGER', `${triggerType} sent for ${driverId}${simulate ? '' : ' [LIVE MIC]'}`);
+
+    if (!simulate && data.status === 'call_initiated') {
+      // Non-simulated: connect mic from dashboard
+      await startLiveMicCall(driverId);
+    }
+
     setTimeout(refreshStatus, 500);
   } catch (e) {
     console.error('Trigger failed:', e);
     addLocalLog('ERROR', `Failed to send trigger: ${e.message}`);
+  }
+}
+
+async function quickCallBetty(triggerType) {
+  const driverId = document.getElementById('driver-select').value;
+  if (triggerType === 'driver_initiated') {
+    return driverCallsBetty();
+  }
+  const simulate = document.getElementById('simulate-toggle').checked;
+  const payload = {
+    driver_id: driverId,
+    trigger_type: triggerType,
+    simulate: simulate,
+    ...getPersonaPayload(),
+  };
+  if (triggerType === 'fatigue_camera') {
+    payload.severity = 'high';
+    payload.fatigue_event_type = 'droopy_eyes';
+  }
+  try {
+    const res = await fetch('/api/triggers/trigger', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    addLocalLog('CALL', `Quick call: ${triggerType} for ${driverId}${simulate ? ' [SIM]' : ' [LIVE MIC]'}`);
+
+    if (!simulate) {
+      // Non-simulated: connect mic from dashboard
+      await startLiveMicCall(driverId);
+    }
+
+    setTimeout(refreshStatus, 500);
+  } catch (e) {
+    addLocalLog('ERROR', `Quick call failed: ${e.message}`);
   }
 }
 
@@ -244,7 +422,13 @@ async function driverCallsBetty() {
     });
     const data = await res.json();
     console.log('Driver calls Betty:', data);
-    addLocalLog('CALL', `Driver ${driverId} calling Betty${simulate ? ' [SIM]' : ''}`);
+    addLocalLog('CALL', `Driver ${driverId} calling Betty${simulate ? ' [SIM]' : ' [LIVE MIC]'}`);
+
+    if (!simulate) {
+      // Non-simulated: connect mic from dashboard
+      await startLiveMicCall(driverId);
+    }
+
     setTimeout(refreshStatus, 500);
   } catch (e) {
     addLocalLog('ERROR', `Failed to initiate driver call: ${e.message}`);
@@ -252,6 +436,10 @@ async function driverCallsBetty() {
 }
 
 async function endCall() {
+  // Stop live mic call if active
+  if (liveCallWs) {
+    stopLiveMicCall();
+  }
   if (!currentCallId) return;
   try {
     const res = await fetch(`/dashboard/api/end-call/${currentCallId}`, { method: 'POST' });
@@ -266,16 +454,31 @@ async function endCall() {
 
 // --- Transcription feed ---
 
+let wsTranscriptActive = false;
+
 function addTranscript(speaker, text, driverId) {
+  wsTranscriptActive = true;
+
   const feed = document.getElementById('transcript-feed');
   // Clear placeholder
   if (feed.querySelector('div[style]')) {
     feed.innerHTML = '';
   }
-  const line = document.createElement('div');
-  line.className = 'transcript-line';
-  line.innerHTML = `<span class="transcript-speaker">${speaker}:</span> ${text}`;
-  feed.appendChild(line);
+
+  // Append to existing line if same speaker, otherwise new line
+  const lastLine = feed.querySelector('.transcript-line:last-child');
+  if (lastLine && lastLine.dataset.speaker === speaker) {
+    const textNode = lastLine.querySelector('.transcript-text');
+    if (textNode) {
+      textNode.textContent += ' ' + text;
+    }
+  } else {
+    const line = document.createElement('div');
+    line.className = 'transcript-line';
+    line.dataset.speaker = speaker;
+    line.innerHTML = `<span class="transcript-speaker">${speaker}:</span> <span class="transcript-text">${text}</span>`;
+    feed.appendChild(line);
+  }
   feed.scrollTop = feed.scrollHeight;
 
   // Also add to event log
@@ -307,6 +510,7 @@ function addLocalLog(type, message) {
 let lastTranscriptCount = 0;
 
 async function pollTranscript() {
+  if (wsTranscriptActive) return;
   if (!currentCallId) {
     lastTranscriptCount = 0;
     return;

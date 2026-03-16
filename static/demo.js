@@ -3,7 +3,7 @@
  * Each page triggers real simulated conversations via the backend.
  */
 
-const TOTAL_PAGES = 6;
+const TOTAL_PAGES = 7;
 const DRIVER_ID = 'DRV-001';  // Dazza for demos
 let currentPage = 1;
 
@@ -49,6 +49,7 @@ window.addEventListener('beforeunload', () => {
 let demoWs = null;
 let playbackCtx = null;
 let nextPlayTime = 0;
+let activeSources = [];
 
 // Timer intervals per page
 const timerIntervals = {};
@@ -104,7 +105,7 @@ function goToPage(page) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
   // Load frames when entering page 2 for the first time
-  if (page === 2 && !framesLoaded) {
+  if (page === 3 && !framesLoaded) {
     loadFatigueFrames();
   }
 }
@@ -134,6 +135,8 @@ function connectDemoWs() {
       handleCallEnded(data);
     } else if (data.type === 'card') {
       handleCard(data);
+    } else if (data.type === 'interrupted') {
+      clearPlayback();
     }
   };
 
@@ -204,16 +207,30 @@ function initPlayback() {
   if (playbackCtx) return;
   playbackCtx = new AudioContext({ sampleRate: 24000 });
   nextPlayTime = 0;
+  activeSources = [];
   // Start continuous cabin noise loop
   startCabinNoise();
 }
 
 function stopPlayback() {
   stopCabinNoise();
+  for (const src of activeSources) {
+    try { src.stop(); } catch (e) {}
+  }
+  activeSources = [];
   if (playbackCtx) {
     playbackCtx.close();
     playbackCtx = null;
   }
+  nextPlayTime = 0;
+}
+
+function clearPlayback() {
+  // Stop all actively playing/scheduled sources (barge-in)
+  for (const src of activeSources) {
+    try { src.stop(); } catch (e) {}
+  }
+  activeSources = [];
   nextPlayTime = 0;
 }
 
@@ -232,12 +249,24 @@ function playAudioChunk(arrayBuffer) {
   source.buffer = buf;
   source.connect(playbackCtx.destination);
   source.start(startTime);
+
+  activeSources.push(source);
+  source.onended = () => {
+    const idx = activeSources.indexOf(source);
+    if (idx !== -1) activeSources.splice(idx, 1);
+  };
+
   nextPlayTime = startTime + buf.duration;
 }
 
 // --- Transcript handling ---
 
+// Track whether we've received any transcript via WebSocket (if so, skip polling)
+let wsTranscriptReceived = false;
+
 function handleTranscript(data) {
+  wsTranscriptReceived = true;
+
   // Find which page has an active call
   const page = findActiveCallPage();
   if (!page) return;
@@ -249,12 +278,25 @@ function handleTranscript(data) {
   const placeholder = feed.querySelector('.demo-transcript-placeholder');
   if (placeholder) placeholder.remove();
 
-  const line = document.createElement('div');
-  line.className = 'demo-transcript-line';
+  // Append to existing line if same speaker, otherwise create new line
+  const lastLine = feed.querySelector('.demo-transcript-line:last-child');
   const speakerClass = data.speaker === 'betty' ? 'betty' : '';
   const speakerLabel = data.speaker === 'betty' ? 'Betty' : 'Driver';
-  line.innerHTML = `<span class="demo-transcript-speaker ${speakerClass}">${speakerLabel}:</span> ${data.text}`;
-  feed.appendChild(line);
+
+  if (lastLine && lastLine.dataset.speaker === data.speaker) {
+    // Same speaker — append text to existing line
+    const textNode = lastLine.querySelector('.demo-transcript-text');
+    if (textNode) {
+      textNode.textContent += ' ' + data.text;
+    }
+  } else {
+    // New speaker — create new line
+    const line = document.createElement('div');
+    line.className = 'demo-transcript-line';
+    line.dataset.speaker = data.speaker;
+    line.innerHTML = `<span class="demo-transcript-speaker ${speakerClass}">${speakerLabel}:</span> <span class="demo-transcript-text">${data.text}</span>`;
+    feed.appendChild(line);
+  }
   feed.scrollTop = feed.scrollHeight;
 }
 
@@ -313,6 +355,7 @@ function handleCallEnded(data) {
   const page = findActiveCallPage();
   if (!page) return;
 
+  wsTranscriptReceived = false;
   pageState[page].callActive = false;
   pageState[page].callCompleted = true;
 
@@ -337,19 +380,22 @@ function handleCallEnded(data) {
 
   // Reset button states per page
   if (page === '2') {
+    const btn = document.getElementById('btn-interrupt');
+    if (btn) { btn.textContent = 'Start Interruption Demo'; btn.disabled = false; }
+  } else if (page === '3') {
     const btn = document.getElementById('btn-fatigue');
     if (btn) { btn.textContent = 'Detect Drowsy Eyes'; btn.disabled = false; }
-  } else if (page === '3') {
+  } else if (page === '4') {
     const btn = document.getElementById('btn-escalation');
     if (btn) { btn.textContent = 'Detect Microsleep'; btn.disabled = false; }
-  } else if (page === '4') {
-    if (!pageState['4'].call2Done) {
+  } else if (page === '5') {
+    if (!pageState['5'].call2Done) {
       // Call 1 just ended — update button and enable Call 2
       const btn1 = document.getElementById('btn-memory-1');
       if (btn1) btn1.textContent = 'Call 1: Complete';
       const btn2 = document.getElementById('btn-memory-2');
       if (btn2) btn2.disabled = false;
-      setCallStatus(4, 'ended', 'Call 1 complete — now trigger Call 2');
+      setCallStatus(5, 'ended', 'Call 1 complete — now trigger Call 2');
     } else {
       // Call 2 just ended
       const btn2 = document.getElementById('btn-memory-2');
@@ -370,10 +416,10 @@ function findPendingCallPage() {
 function handleCard(data) {
   // Show on current page's card area, or page 3 for incident, or page 5
   let targetArea = null;
-  if (currentPage === 3 || findActiveCallPage() === '3') {
-    targetArea = document.getElementById('cards-area-3');
-  } else if (currentPage === 5) {
-    targetArea = document.getElementById('cards-area-5');
+  if (currentPage === 4 || findActiveCallPage() === '4') {
+    targetArea = document.getElementById('cards-area-4');
+  } else if (currentPage === 6) {
+    targetArea = document.getElementById('cards-area-6');
   }
 
   if (!targetArea) return;
@@ -404,8 +450,8 @@ function handleCard(data) {
 
 // --- Trigger actions ---
 
-async function triggerFatigue() {
-  const btn = document.getElementById('btn-fatigue');
+async function triggerInterrupt() {
+  const btn = document.getElementById('btn-interrupt');
   btn.disabled = true;
   btn.textContent = 'Triggering...';
 
@@ -424,13 +470,47 @@ async function triggerFatigue() {
         severity: 'high',
         fatigue_event_type: 'droopy_eyes',
         simulate: true,
+        persona_mood: 'grumpy',
+        persona_situation: 'argument_dispatch',
+        persona_resistance: 'resistant',
+        persona_interrupts: true,
+      }),
+    });
+    btn.textContent = 'Call in progress...';
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Start Interruption Demo';
+    setCallStatus(2, 'idle', 'Failed to trigger — try again');
+  }
+}
+
+async function triggerFatigue() {
+  const btn = document.getElementById('btn-fatigue');
+  btn.disabled = true;
+  btn.textContent = 'Triggering...';
+
+  pageState['3'] = { callPending: true, callActive: false };
+
+  setCallStatus(3, 'ringing', 'Ringing...');
+  startRinging();
+
+  try {
+    await fetch('/api/triggers/trigger', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        driver_id: DRIVER_ID,
+        trigger_type: 'fatigue_camera',
+        severity: 'high',
+        fatigue_event_type: 'droopy_eyes',
+        simulate: true,
       }),
     });
     btn.textContent = 'Call in progress...';
   } catch (e) {
     btn.disabled = false;
     btn.textContent = 'Detect Drowsy Eyes';
-    setCallStatus(2, 'idle', 'Failed to trigger — try again');
+    setCallStatus(3, 'idle', 'Failed to trigger — try again');
   }
 }
 
@@ -439,9 +519,9 @@ async function triggerEscalation() {
   btn.disabled = true;
   btn.textContent = 'Triggering...';
 
-  pageState['3'] = { callPending: true, callActive: false };
+  pageState['4'] = { callPending: true, callActive: false };
 
-  setCallStatus(3, 'ringing', 'Ringing...');
+  setCallStatus(4, 'ringing', 'Ringing...');
   startRinging();
 
   try {
@@ -462,7 +542,7 @@ async function triggerEscalation() {
   } catch (e) {
     btn.disabled = false;
     btn.textContent = 'Detect Microsleep';
-    setCallStatus(3, 'idle', 'Failed to trigger — try again');
+    setCallStatus(4, 'idle', 'Failed to trigger — try again');
   }
 }
 
@@ -471,9 +551,9 @@ async function triggerMemoryCall1() {
   btn.disabled = true;
   btn.textContent = 'Calling...';
 
-  pageState['4'] = { callPending: true, callActive: false, call2Done: false };
+  pageState['5'] = { callPending: true, callActive: false, call2Done: false };
 
-  setCallStatus(4, 'ringing', 'Call 1: Ringing...');
+  setCallStatus(5, 'ringing', 'Call 1: Ringing...');
   startRinging();
 
   try {
@@ -490,7 +570,7 @@ async function triggerMemoryCall1() {
   } catch (e) {
     btn.disabled = false;
     btn.textContent = 'Call 1: Companion Check-in';
-    setCallStatus(4, 'idle', 'Failed — try again');
+    setCallStatus(5, 'idle', 'Failed — try again');
   }
 }
 
@@ -499,15 +579,15 @@ async function triggerMemoryCall2() {
   btn.disabled = true;
   btn.textContent = 'Calling...';
 
-  pageState['4'].callPending = true;
-  pageState['4'].callActive = false;
-  pageState['4'].call2Done = true;
+  pageState['5'].callPending = true;
+  pageState['5'].callActive = false;
+  pageState['5'].call2Done = true;
 
   // Clear transcript for call 2
-  const feed = document.getElementById('transcript-4');
+  const feed = document.getElementById('transcript-5');
   feed.innerHTML = '<div class="demo-transcript-placeholder">Call 2 starting...</div>';
 
-  setCallStatus(4, 'ringing', 'Call 2: Ringing...');
+  setCallStatus(5, 'ringing', 'Call 2: Ringing...');
   startRinging();
 
   try {
@@ -526,14 +606,14 @@ async function triggerMemoryCall2() {
   } catch (e) {
     btn.disabled = false;
     btn.textContent = 'Call 2: Fatigue Event';
-    setCallStatus(4, 'idle', 'Failed — try again');
+    setCallStatus(5, 'idle', 'Failed — try again');
   }
 }
 
 // --- Card generation (page 5) ---
 
 async function generateDemoCard(cardType, scenario) {
-  const area = document.getElementById('cards-area-5');
+  const area = document.getElementById('cards-area-6');
 
   // Add spinner
   const spinner = document.createElement('div');
@@ -648,6 +728,9 @@ function setCallStatus(page, status, text) {
 let lastTranscriptCounts = {};
 
 async function pollTranscripts() {
+  // Skip polling if WebSocket is delivering transcripts (avoids duplicates)
+  if (wsTranscriptReceived) return;
+
   const page = findActiveCallPage();
   if (!page) return;
 

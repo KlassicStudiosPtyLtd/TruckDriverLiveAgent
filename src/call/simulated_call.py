@@ -32,8 +32,8 @@ from src.voice.prompts import build_system_prompt
 logger = logging.getLogger(__name__)
 
 MODEL = "gemini-2.5-flash-native-audio-latest"
-MAX_TURNS = 8
-MAX_DURATION_S = 120
+MAX_TURNS = 16
+MAX_DURATION_S = 240
 OUTPUT_RATE = 24000
 RECORDINGS_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data", "recordings")
 PERSONAS_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "data", "mock", "driver_personas.json")
@@ -241,6 +241,16 @@ def _build_driver_persona(driver: dict, trigger_type: str, trigger_data: dict,
                      persona_name, persona.get("mood"), persona.get("situation"),
                      persona.get("resistance"))
 
+    # If persona interrupts, add instruction to cut people off
+    if persona and persona.get("interrupts"):
+        persona_prompt += (
+            " You frequently interrupt and talk over people. Don't wait for Betty "
+            "to finish — cut her off mid-sentence when you have something to say. "
+            "When you interrupt, be abrupt and short: 'Yeah yeah, I know—', "
+            "'Mate, hang on—', 'Nah, listen—'. Don't give full polite responses "
+            "after cutting someone off. Sound impatient and dismissive."
+        )
+
     # Combine: trigger context first (what happened), then persona (how they feel about it)
     combined = " ".join(filter(None, [trigger_context, persona_prompt]))
 
@@ -379,6 +389,155 @@ async def _stream_turn(source_session, target_session, speaker: str,
     return len(chunks) > 0, cur
 
 
+async def _interrupt_turn(betty_session, driver_session, driver_name: str,
+                          on_transcript, on_audio, t0: float,
+                          cancel_event: asyncio.Event,
+                          audio_segments: list[AudioSegment] | None = None,
+                          noise_cursor: int = 0) -> tuple[bool, int]:
+    """Simulate a barge-in: let Betty speak for 1.5-3s, then break out,
+    have the driver respond, and feed the driver's audio back to Betty —
+    triggering Gemini's real barge-in detection."""
+    interrupt_after = random.uniform(1.5, 3.0)
+    logger.info("Interrupt turn: driver will cut in after %.1fs", interrupt_after)
+
+    betty_chunks = []
+    segment_start = time.time() - t0
+    sent_activity_start = False
+    cur = noise_cursor
+    start = time.time()
+    interrupted = False
+
+    # Phase 1: Stream Betty's audio to the driver until interrupt time
+    async for resp in betty_session.receive():
+        if cancel_event.is_set():
+            break
+
+        sc = resp.server_content
+
+        if resp.tool_call:
+            results = []
+            for fc in resp.tool_call.function_calls:
+                logger.info("Sim tool call: %s(%s)", fc.name, fc.args)
+                result = await handle_tool_call(fc.name, fc.args or {})
+                results.append(types.FunctionResponse(
+                    name=fc.name, id=fc.id, response=result,
+                ))
+            await betty_session.send_tool_response(function_responses=results)
+            continue
+
+        if not sc:
+            continue
+
+        if sc.model_turn and sc.model_turn.parts:
+            for part in sc.model_turn.parts:
+                if part.inline_data and part.inline_data.data:
+                    audio_data = part.inline_data.data
+                    betty_chunks.append(audio_data)
+
+                    if not sent_activity_start:
+                        await driver_session.send_realtime_input(
+                            activity_start=types.ActivityStart()
+                        )
+                        sent_activity_start = True
+
+                    pcm_16k = _resample_24k_to_16k(audio_data)
+                    if pcm_16k:
+                        await driver_session.send_realtime_input(
+                            audio={"data": pcm_16k, "mime_type": "audio/pcm"}
+                        )
+
+                    if on_audio:
+                        await on_audio(audio_data)
+
+                    # Time to interrupt — break out immediately
+                    if (time.time() - start) >= interrupt_after:
+                        interrupted = True
+                        logger.info("Driver interrupting Betty at %.1fs", time.time() - start)
+                        break  # break inner for loop
+
+            if interrupted:
+                break  # break outer async for loop
+
+        ot = getattr(sc, "output_transcription", None)
+        if ot and ot.text:
+            text = ot.text.strip()
+            if text:
+                logger.info("Sim transcript [Betty]: %s", text)
+                if on_transcript:
+                    await on_transcript("Betty", text, time.time() - t0)
+
+        if sc.turn_complete:
+            break
+
+    # End Betty's audio to driver
+    if sent_activity_start:
+        await driver_session.send_realtime_input(
+            activity_end=types.ActivityEnd()
+        )
+
+    # Save Betty's partial audio
+    if audio_segments is not None and betty_chunks:
+        combined = b"".join(betty_chunks)
+        audio_segments.append(AudioSegment(
+            speaker="Betty", pcm_data=combined, start_time=segment_start,
+        ))
+
+    if not interrupted:
+        return len(betty_chunks) > 0, cur
+
+    # Phase 2: Prompt the driver to cut in immediately — no drain.
+    # The driver's audio fed to Betty via _stream_turn will trigger
+    # Gemini's server-side barge-in, discarding Betty's buffered output.
+    interrupt_prompts = [
+        "Cut in NOW mid-sentence. Say something short and abrupt like "
+        "'Yeah yeah, I KNOW' or 'Mate, I'm FINE' — talk over her.",
+        "Interrupt Betty right now. Be abrupt: 'Hang on—' or "
+        "'Look, I told you—' Keep it to one short burst.",
+        "Cut her off. Say something dismissive and short like "
+        "'Yeah alright, I get it' or 'Nah, listen—'",
+    ]
+    await driver_session.send_client_content(
+        turns=types.Content(
+            role="user",
+            parts=[types.Part(text=random.choice(interrupt_prompts))],
+        ),
+        turn_complete=True,
+    )
+
+    # Phase 3: Stream driver's interruption to Betty.
+    # This feeds driver audio into Betty's session, triggering barge-in.
+    driver_had_audio, cur = await _stream_turn(
+        driver_session, betty_session, driver_name,
+        on_transcript, on_audio, t0, cancel_event,
+        audio_segments, is_driver=True, noise_cursor=cur,
+    )
+
+    # Phase 4: Flush any stale Betty content from the interrupted turn.
+    # The buffered remainder (e.g. "Betty!" from "it's Betty!") is already
+    # sitting in the receive queue, so this resolves near-instantly.
+    # 1s timeout ensures no perceptible silence.
+    async def _flush_stale():
+        async for resp in betty_session.receive():
+            sc = resp.server_content
+            if resp.tool_call:
+                results = []
+                for fc in resp.tool_call.function_calls:
+                    result = await handle_tool_call(fc.name, fc.args or {})
+                    results.append(types.FunctionResponse(
+                        name=fc.name, id=fc.id, response=result,
+                    ))
+                await betty_session.send_tool_response(function_responses=results)
+                continue
+            if sc and sc.turn_complete:
+                break
+    try:
+        await asyncio.wait_for(_flush_stale(), timeout=1.0)
+    except (asyncio.TimeoutError, Exception):
+        pass
+
+    return True, cur
+
+
 async def run_simulated_call(
     driver_id: str,
     trigger_type: str,
@@ -418,6 +577,7 @@ async def run_simulated_call(
     )
 
     driver_persona = _build_driver_persona(driver, trigger_type, trigger_data, persona)
+    persona_interrupts = bool(persona and persona.get("interrupts"))
 
     # Track call + cancellation
     call = call_manager.initiate_call(driver_id, trigger_type, trigger_data)
@@ -470,6 +630,7 @@ async def run_simulated_call(
     driver_config = _make_config(driver_persona, "Puck")
 
     turn_count = 0
+    interrupt_count = 0  # track interrupts to cap at 2 per call
     noise_cursor = 0  # continuous cabin noise position
     try:
         async with (
@@ -509,6 +670,8 @@ async def run_simulated_call(
                     turn_complete=True,
                 )
 
+            winding_down = False
+
             while turn_count < MAX_TURNS and (time.time() - t0) < MAX_DURATION_S:
                 if cancel_event.is_set():
                     logger.info("Simulated call cancelled by user")
@@ -521,22 +684,128 @@ async def run_simulated_call(
                     speaker, source, target = "Betty", betty, driver_session
 
                 is_driver_turn = speaker != "Betty"
+
+                # Check if we should start wrapping up (2 turns from limit
+                # or 30s from time limit)
+                near_turn_limit = turn_count >= MAX_TURNS - 2
+                near_time_limit = (time.time() - t0) >= MAX_DURATION_S - 30
+
+                if (near_turn_limit or near_time_limit) and not winding_down:
+                    winding_down = True
+                    logger.info("Sim turn %d: winding down conversation", turn_count)
+
+                    # Prompt Betty to wrap up naturally
+                    await betty.send_client_content(
+                        turns=types.Content(
+                            role="user",
+                            parts=[types.Part(text=(
+                                "Wrap up the conversation now. Say a brief, caring "
+                                "goodbye — something like 'Alright love, please look "
+                                "after yourself' or 'Take care out there, Graeme'. "
+                                "Keep it to 1-2 sentences."
+                            ))],
+                        ),
+                        turn_complete=True,
+                    )
+
+                    # Betty's goodbye
+                    logger.info("Sim turn %d: Betty wrapping up...", turn_count)
+                    has_audio, noise_cursor = await asyncio.wait_for(
+                        _stream_turn(betty, driver_session, "Betty",
+                                     on_transcript, on_audio, t0, cancel_event,
+                                     audio_segments, is_driver=False,
+                                     noise_cursor=noise_cursor),
+                        timeout=60,
+                    )
+                    if has_audio:
+                        logger.info("Sim turn %d: Betty goodbye done", turn_count)
+
+                    # Prompt driver to say goodbye
+                    await driver_session.send_client_content(
+                        turns=types.Content(
+                            role="user",
+                            parts=[types.Part(text=(
+                                "Betty is ending the call. Say a brief goodbye — "
+                                "something casual like 'Yeah, righto. See ya.' or "
+                                "'Alright, catch ya later.' Keep it short."
+                            ))],
+                        ),
+                        turn_complete=True,
+                    )
+
+                    turn_count += 1
+                    logger.info("Sim turn %d: Driver saying goodbye...", turn_count)
+                    has_audio, noise_cursor = await asyncio.wait_for(
+                        _stream_turn(driver_session, betty, driver["first_name"],
+                                     on_transcript, on_audio, t0, cancel_event,
+                                     audio_segments, is_driver=True,
+                                     noise_cursor=noise_cursor),
+                        timeout=60,
+                    )
+                    if has_audio:
+                        logger.info("Sim turn %d: Driver goodbye done", turn_count)
+
+                    break  # conversation ended naturally
+
                 logger.info("Sim turn %d: %s speaking...", turn_count, speaker)
 
-                has_audio, noise_cursor = await asyncio.wait_for(
-                    _stream_turn(source, target, speaker,
-                                 on_transcript, on_audio, t0, cancel_event,
-                                 audio_segments,
-                                 is_driver=is_driver_turn,
-                                 noise_cursor=noise_cursor),
-                    timeout=60,
+                # Use interrupt turn for Betty's turns when persona interrupts.
+                # First Betty turn (turn 2) always interrupts; subsequent 80% chance.
+                # Cap at 3 interrupts per call to avoid destabilising the session.
+                use_interrupt = (
+                    not is_driver_turn
+                    and persona_interrupts
+                    and interrupt_count < 3
+                    and turn_count >= 2
+                    and (turn_count == 2 or random.random() < 0.8)
                 )
+
+                if use_interrupt:
+                    interrupt_count += 1
+                    logger.info("Sim turn %d: driver will interrupt Betty (interrupt #%d)", turn_count, interrupt_count)
+                    has_audio, noise_cursor = await asyncio.wait_for(
+                        _interrupt_turn(betty, driver_session,
+                                        driver["first_name"],
+                                        on_transcript, on_audio, t0,
+                                        cancel_event, audio_segments,
+                                        noise_cursor=noise_cursor),
+                        timeout=60,
+                    )
+                    # Interrupt consumed the driver's response too,
+                    # so skip the next driver turn
+                    turn_count += 1
+                else:
+                    has_audio, noise_cursor = await asyncio.wait_for(
+                        _stream_turn(source, target, speaker,
+                                     on_transcript, on_audio, t0, cancel_event,
+                                     audio_segments,
+                                     is_driver=is_driver_turn,
+                                     noise_cursor=noise_cursor),
+                        timeout=60,
+                    )
 
                 if not has_audio:
                     logger.warning("Sim turn %d: no audio from %s", turn_count, speaker)
                     break
 
                 logger.info("Sim turn %d: %s done", turn_count, speaker)
+
+                # Detect goodbye loops — if both sides have said bye, end the call.
+                # Check the last few transcript entries for farewell patterns.
+                if len(transcript_entries) >= 2:
+                    _bye_words = {"bye", "see ya", "hooroo", "catch ya", "later",
+                                  "take care", "cheers", "good rest", "look after",
+                                  "righto", "safe travels", "stay safe"}
+                    last_two = transcript_entries[-2:]
+                    speakers = {e["speaker"] for e in last_two}
+                    if len(speakers) >= 2:  # both sides spoke
+                        both_bye = all(
+                            any(w in e["text"].lower() for w in _bye_words)
+                            for e in last_two
+                        )
+                        if both_bye:
+                            logger.info("Sim turn %d: both sides said goodbye, ending call", turn_count)
+                            break
 
     except asyncio.CancelledError:
         logger.info("Simulated call task cancelled for %s", driver_id)

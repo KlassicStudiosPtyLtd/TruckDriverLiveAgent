@@ -165,8 +165,16 @@ class DriverPhone {
     this.workletNode = new AudioWorkletNode(this.audioCtx, 'pcm-processor');
 
     this.workletNode.port.onmessage = (event) => {
-      if (this.callWs && this.callWs.readyState === WebSocket.OPEN) {
-        this.callWs.send(event.data); // ArrayBuffer of Int16 PCM
+      if (event.data instanceof ArrayBuffer) {
+        // PCM audio data — send to server
+        if (this.callWs && this.callWs.readyState === WebSocket.OPEN) {
+          this.callWs.send(event.data);
+        }
+      } else if (event.data && event.data.type === 'vad') {
+        // Client-side VAD: mute Betty immediately when driver starts speaking
+        if (event.data.speaking) {
+          this._clearPlayback();
+        }
       }
     };
 
@@ -196,6 +204,7 @@ class DriverPhone {
     this._playbackQueue = [];
     this._isPlaying = false;
     this._nextPlayTime = 0;
+    this._activeSources = [];
   }
 
   _queueAudio(arrayBuffer) {
@@ -221,6 +230,12 @@ class DriverPhone {
     source.connect(this._playbackCtx.destination);
     source.start(startTime);
 
+    this._activeSources.push(source);
+    source.onended = () => {
+      const idx = this._activeSources.indexOf(source);
+      if (idx !== -1) this._activeSources.splice(idx, 1);
+    };
+
     this._nextPlayTime = startTime + audioBuffer.duration;
 
     // Update audio level indicator
@@ -231,13 +246,25 @@ class DriverPhone {
   }
 
   _clearPlayback() {
-    // Reset scheduled audio time so new audio plays immediately
+    // Stop all actively playing/scheduled sources immediately
+    if (this._activeSources) {
+      for (const src of this._activeSources) {
+        try { src.stop(); } catch (e) {}
+      }
+      this._activeSources = [];
+    }
     if (this._playbackCtx) {
       this._nextPlayTime = 0;
     }
   }
 
   _stopPlayback() {
+    if (this._activeSources) {
+      for (const src of this._activeSources) {
+        try { src.stop(); } catch (e) {}
+      }
+      this._activeSources = [];
+    }
     if (this._playbackCtx) {
       this._playbackCtx.close();
       this._playbackCtx = null;

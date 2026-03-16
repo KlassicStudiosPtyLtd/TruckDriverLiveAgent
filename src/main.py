@@ -66,6 +66,7 @@ class TriggerRequest(BaseModel):
     persona_mood: Optional[str] = None
     persona_situation: Optional[str] = None
     persona_resistance: Optional[str] = None
+    persona_interrupts: Optional[bool] = None
 
 
 @app.post("/api/triggers/trigger")
@@ -110,6 +111,8 @@ async def trigger_event(req: TriggerRequest):
             persona["situation"] = req.persona_situation
         if req.persona_resistance:
             persona["resistance"] = req.persona_resistance
+        if req.persona_interrupts:
+            persona["interrupts"] = True
         asyncio.create_task(run_simulated_call(
             driver_id=req.driver_id,
             trigger_type=req.trigger_type,

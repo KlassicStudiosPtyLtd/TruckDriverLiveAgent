@@ -78,9 +78,50 @@
             </div>
         </div>
 
-        <!-- PAGE 2: Fatigue Detection -->
-        <div class="demo-page" id="page-2" data-title="Fatigue Detection">
-            <div class="demo-page-number">Step 1 of 5</div>
+        <!-- PAGE 2: Natural Interruption -->
+        <div class="demo-page" id="page-2" data-title="Natural Interruption">
+            <div class="demo-page-number">Step 1 of 6</div>
+            <h1>Natural Interruption</h1>
+            <div class="demo-subtitle">
+                Real conversations have interruptions. When a driver talks over Betty,
+                she stops speaking immediately and listens — just like a real person.
+                Gemini's native barge-in detection handles this seamlessly.
+            </div>
+
+            <div class="demo-callout">
+                <strong>What happens:</strong> A fatigue event triggers a call with a grumpy, impatient
+                driver persona who interrupts Betty mid-sentence. Watch how Betty handles being
+                cut off and responds naturally to the interruption.
+            </div>
+
+            <div class="demo-interactive">
+                <h3>Try it — trigger a call with interruptions</h3>
+                <div class="demo-btn-group" style="margin-bottom:1rem;">
+                    <button class="demo-btn demo-btn-danger" id="btn-interrupt" onclick="triggerInterrupt()">
+                        Start Interruption Demo
+                    </button>
+                </div>
+                <div class="demo-call-area" id="call-area-2">
+                    <div class="demo-call-status" id="call-status-2">Press the button to start</div>
+                    <div class="demo-call-timer" id="call-timer-2">00:00</div>
+                </div>
+                <div class="demo-transcript" id="transcript-2">
+                    <div class="demo-transcript-placeholder">Conversation will appear here...</div>
+                </div>
+            </div>
+
+            <div class="demo-nav">
+                <button class="demo-btn demo-btn-outline" onclick="goToPage(1)">&larr; Back</button>
+                <div class="demo-nav-hint" id="nav-hint-2"></div>
+                <button class="demo-btn demo-btn-primary" id="btn-next-2" onclick="goToPage(3)">
+                    Next: Fatigue Detection &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 3: Fatigue Detection -->
+        <div class="demo-page" id="page-3" data-title="Fatigue Detection">
+            <div class="demo-page-number">Step 2 of 6</div>
             <h1>Fatigue Detection</h1>
             <div class="demo-subtitle">
                 When an in-cab camera detects signs of fatigue — droopy eyes, yawning, or head nodding —
@@ -132,27 +173,27 @@
                         Detect Drowsy Eyes
                     </button>
                 </div>
-                <div class="demo-call-area" id="call-area-2">
-                    <div class="demo-call-status" id="call-status-2">Press the button to trigger a fatigue event</div>
-                    <div class="demo-call-timer" id="call-timer-2">00:00</div>
+                <div class="demo-call-area" id="call-area-3">
+                    <div class="demo-call-status" id="call-status-3">Press the button to trigger a fatigue event</div>
+                    <div class="demo-call-timer" id="call-timer-3">00:00</div>
                 </div>
-                <div class="demo-transcript" id="transcript-2">
+                <div class="demo-transcript" id="transcript-3">
                     <div class="demo-transcript-placeholder">Conversation will appear here...</div>
                 </div>
             </div>
 
             <div class="demo-nav">
-                <button class="demo-btn demo-btn-outline" onclick="goToPage(1)">&larr; Back</button>
-                <div class="demo-nav-hint" id="nav-hint-2">Complete the call to continue</div>
-                <button class="demo-btn demo-btn-primary" id="btn-next-2" onclick="goToPage(3)">
+                <button class="demo-btn demo-btn-outline" onclick="goToPage(2)">&larr; Back</button>
+                <div class="demo-nav-hint" id="nav-hint-3">Complete the call to continue</div>
+                <button class="demo-btn demo-btn-primary" id="btn-next-3" onclick="goToPage(4)">
                     Next: Escalation &rarr;
                 </button>
             </div>
         </div>
 
-        <!-- PAGE 3: Smart Escalation -->
-        <div class="demo-page" id="page-3" data-title="Smart Escalation">
-            <div class="demo-page-number">Step 2 of 5</div>
+        <!-- PAGE 4: Smart Escalation -->
+        <div class="demo-page" id="page-4" data-title="Smart Escalation">
+            <div class="demo-page-number">Step 3 of 6</div>
             <h1>Smart Escalation</h1>
             <div class="demo-subtitle">
                 When a driver shows dangerous behaviour and Betty can't convince them to stop,
@@ -171,28 +212,28 @@
                         Detect Microsleep
                     </button>
                 </div>
-                <div class="demo-call-area" id="call-area-3">
-                    <div class="demo-call-status" id="call-status-3">Press the button to trigger a microsleep event</div>
-                    <div class="demo-call-timer" id="call-timer-3">00:00</div>
+                <div class="demo-call-area" id="call-area-4">
+                    <div class="demo-call-status" id="call-status-4">Press the button to trigger a microsleep event</div>
+                    <div class="demo-call-timer" id="call-timer-4">00:00</div>
                 </div>
-                <div class="demo-transcript" id="transcript-3">
+                <div class="demo-transcript" id="transcript-4">
                     <div class="demo-transcript-placeholder">Conversation will appear here...</div>
                 </div>
-                <div class="demo-cards-area" id="cards-area-3"></div>
+                <div class="demo-cards-area" id="cards-area-4"></div>
             </div>
 
             <div class="demo-nav">
-                <button class="demo-btn demo-btn-outline" onclick="goToPage(2)">&larr; Back</button>
-                <div class="demo-nav-hint" id="nav-hint-3"></div>
-                <button class="demo-btn demo-btn-primary" id="btn-next-3" onclick="goToPage(4)">
+                <button class="demo-btn demo-btn-outline" onclick="goToPage(3)">&larr; Back</button>
+                <div class="demo-nav-hint" id="nav-hint-4"></div>
+                <button class="demo-btn demo-btn-primary" id="btn-next-4" onclick="goToPage(5)">
                     Next: Memory &rarr;
                 </button>
             </div>
         </div>
 
-        <!-- PAGE 4: Cross-Call Memory -->
-        <div class="demo-page" id="page-4" data-title="Cross-Call Memory">
-            <div class="demo-page-number">Step 3 of 5</div>
+        <!-- PAGE 5: Cross-Call Memory -->
+        <div class="demo-page" id="page-5" data-title="Cross-Call Memory">
+            <div class="demo-page-number">Step 4 of 6</div>
             <h1>Cross-Call Memory</h1>
             <div class="demo-subtitle">
                 Betty remembers what happened in previous calls within a driver's shift.
@@ -215,27 +256,27 @@
                         Call 2: Fatigue Event (after Call 1)
                     </button>
                 </div>
-                <div class="demo-call-area" id="call-area-4">
-                    <div class="demo-call-status" id="call-status-4">Start with Call 1 — a friendly check-in</div>
-                    <div class="demo-call-timer" id="call-timer-4">00:00</div>
+                <div class="demo-call-area" id="call-area-5">
+                    <div class="demo-call-status" id="call-status-5">Start with Call 1 — a friendly check-in</div>
+                    <div class="demo-call-timer" id="call-timer-5">00:00</div>
                 </div>
-                <div class="demo-transcript" id="transcript-4">
+                <div class="demo-transcript" id="transcript-5">
                     <div class="demo-transcript-placeholder">Conversation will appear here...</div>
                 </div>
             </div>
 
             <div class="demo-nav">
-                <button class="demo-btn demo-btn-outline" onclick="goToPage(3)">&larr; Back</button>
-                <div class="demo-nav-hint" id="nav-hint-4"></div>
-                <button class="demo-btn demo-btn-primary" id="btn-next-4" onclick="goToPage(5)">
+                <button class="demo-btn demo-btn-outline" onclick="goToPage(4)">&larr; Back</button>
+                <div class="demo-nav-hint" id="nav-hint-5"></div>
+                <button class="demo-btn demo-btn-primary" id="btn-next-5" onclick="goToPage(6)">
                     Next: Shift Summary &rarr;
                 </button>
             </div>
         </div>
 
-        <!-- PAGE 5: Shift Summary -->
-        <div class="demo-page" id="page-5" data-title="Shift Summary">
-            <div class="demo-page-number">Step 4 of 5</div>
+        <!-- PAGE 6: Shift Summary -->
+        <div class="demo-page" id="page-6" data-title="Shift Summary">
+            <div class="demo-page-number">Step 5 of 6</div>
             <h1>Shift Summary</h1>
             <div class="demo-subtitle">
                 At the end of a shift, Betty generates visual summary cards — wellness reports
@@ -260,21 +301,21 @@
                     <strong>Rest stop cards</strong> use Gemini Flash + Google Search grounding to describe the real
                     location, then Imagen 4 generates a scenic background photograph.
                 </div>
-                <div class="demo-cards-area" id="cards-area-5"></div>
+                <div class="demo-cards-area" id="cards-area-6"></div>
             </div>
 
             <div class="demo-nav">
-                <button class="demo-btn demo-btn-outline" onclick="goToPage(4)">&larr; Back</button>
+                <button class="demo-btn demo-btn-outline" onclick="goToPage(5)">&larr; Back</button>
                 <div></div>
-                <button class="demo-btn demo-btn-primary" id="btn-next-5" onclick="goToPage(6)">
+                <button class="demo-btn demo-btn-primary" id="btn-next-6" onclick="goToPage(7)">
                     Next: Architecture &rarr;
                 </button>
             </div>
         </div>
 
-        <!-- PAGE 6: Architecture -->
-        <div class="demo-page" id="page-6" data-title="Architecture">
-            <div class="demo-page-number">Step 5 of 5</div>
+        <!-- PAGE 7: Architecture -->
+        <div class="demo-page" id="page-7" data-title="Architecture">
+            <div class="demo-page-number">Step 6 of 6</div>
             <h1>How It Works</h1>
             <div class="demo-subtitle">
                 Betty is built entirely on Google's AI stack — Gemini Live API for voice,
@@ -345,7 +386,7 @@
             </div>
 
             <div class="demo-nav">
-                <button class="demo-btn demo-btn-outline" onclick="goToPage(5)">&larr; Back</button>
+                <button class="demo-btn demo-btn-outline" onclick="goToPage(6)">&larr; Back</button>
                 <div></div>
                 <div class="demo-btn-group">
                     <button class="demo-btn demo-btn-outline" onclick="window.location.href='/'">

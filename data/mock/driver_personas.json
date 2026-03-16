@@ -109,11 +109,11 @@
   "preset_combinations": [
     {"name": "Easy Run", "mood": "cheerful", "situation": "beautiful_drive", "resistance": "cooperative"},
     {"name": "Tough Day", "mood": "stressed", "situation": "running_late", "resistance": "resistant"},
-    {"name": "Danger Zone", "mood": "exhausted", "situation": "bad_sleep", "resistance": "defiant"},
+    {"name": "Danger Zone", "mood": "exhausted", "situation": "bad_sleep", "resistance": "defiant", "interrupts": true},
     {"name": "Lonely Night", "mood": "lonely", "situation": "radio_broke", "resistance": "cooperative"},
-    {"name": "Old Hand", "mood": "cocky", "situation": "normal", "resistance": "defiant"},
+    {"name": "Old Hand", "mood": "cocky", "situation": "normal", "resistance": "defiant", "interrupts": true},
     {"name": "Nervous Newbie", "mood": "new_driver", "situation": "bad_weather", "resistance": "cooperative"},
-    {"name": "Road Rage", "mood": "grumpy", "situation": "argument_dispatch", "resistance": "resistant"},
+    {"name": "Road Rage", "mood": "grumpy", "situation": "argument_dispatch", "resistance": "resistant", "interrupts": true},
     {"name": "Shaken Up", "mood": "anxious", "situation": "near_miss", "resistance": "cooperative"},
     {"name": "Missing Home", "mood": "homesick", "situation": "normal", "resistance": "cooperative"},
     {"name": "Silent Type", "mood": "stoic", "situation": "normal", "resistance": "resistant"}

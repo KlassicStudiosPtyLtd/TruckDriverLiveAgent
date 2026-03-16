@@ -9,6 +9,8 @@ class PCMProcessor extends AudioWorkletProcessor {
     super();
     this._buffer = new Float32Array(1600); // 100ms at 16kHz
     this._offset = 0;
+    this._wasSpeaking = false;
+    this._speechThreshold = 0.015;
   }
 
   process(inputs, outputs, parameters) {
@@ -27,7 +29,24 @@ class PCMProcessor extends AudioWorkletProcessor {
           const s = Math.max(-1, Math.min(1, this._buffer[j]));
           pcm[j] = s < 0 ? s * 0x8000 : s * 0x7fff;
         }
+        // Compute RMS for VAD before resetting buffer
+        let sumSq = 0;
+        for (let k = 0; k < this._buffer.length; k++) {
+          sumSq += this._buffer[k] * this._buffer[k];
+        }
+        const rms = Math.sqrt(sumSq / this._buffer.length);
+        const isSpeaking = rms > this._speechThreshold;
+
         this.port.postMessage(pcm.buffer, [pcm.buffer]);
+
+        // Post VAD transitions
+        if (isSpeaking && !this._wasSpeaking) {
+          this.port.postMessage({ type: 'vad', speaking: true });
+        } else if (!isSpeaking && this._wasSpeaking) {
+          this.port.postMessage({ type: 'vad', speaking: false });
+        }
+        this._wasSpeaking = isSpeaking;
+
         this._buffer = new Float32Array(1600);
         this._offset = 0;
       }

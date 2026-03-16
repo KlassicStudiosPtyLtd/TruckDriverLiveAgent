@@ -1,0 +1,2327 @@
+[
+  {
+    "run": 1,
+    "status": "completed",
+    "turns": 5,
+    "duration": 18.1,
+    "transcript_lines": 22,
+    "betty_lines": 10,
+    "driver_lines": 12,
+    "interrupt_turns_planned": 2,
+    "interrupt_cut_in_logged": 2,
+    "interrupts_triggered": 1,
+    "betty_acknowledged_interrupt": 0,
+    "incomplete_betty_sentences": 8,
+    "short_driver_interjections": 12,
+    "transcript": [
+      {
+        "speaker": "Graeme",
+        "text": "Yeah, hello?",
+        "time": 3.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "Hey Graeme,",
+        "time": 6.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 6.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "Betty!",
+        "time": 6.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "Look,",
+        "time": 6.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "I'm",
+        "time": 6.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "really",
+        "time": 6.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "worried",
+        "time": 7.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "about",
+        "time": 7.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "you,",
+        "time": 7.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "love.",
+        "time": 7.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Mate, listen,",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I just",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "had a",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "blue",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "with",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "dispatch.",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "They don't",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "get",
+        "time": 15.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "it,",
+        "time": 15.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "the heat,",
+        "time": 15.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "the road...",
+        "time": 15.3
+      }
+    ]
+  },
+  {
+    "run": 2,
+    "status": "completed",
+    "turns": 5,
+    "duration": 16.0,
+    "transcript_lines": 17,
+    "betty_lines": 10,
+    "driver_lines": 7,
+    "interrupt_turns_planned": 2,
+    "interrupt_cut_in_logged": 2,
+    "interrupts_triggered": 1,
+    "betty_acknowledged_interrupt": 0,
+    "incomplete_betty_sentences": 8,
+    "short_driver_interjections": 7,
+    "transcript": [
+      {
+        "speaker": "Graeme",
+        "text": "Yeah, hello?",
+        "time": 3.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "Hey Graeme,",
+        "time": 6.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 6.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "Betty!",
+        "time": 6.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "Look,",
+        "time": 6.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "I'm",
+        "time": 6.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "really",
+        "time": 6.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "worried",
+        "time": 7.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "about",
+        "time": 7.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "you,",
+        "time": 7.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "love.",
+        "time": 7.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Mate, I'm",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "fine,",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "just",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "driving.",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "What do",
+        "time": 15.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "you want?",
+        "time": 15.3
+      }
+    ]
+  },
+  {
+    "run": 3,
+    "status": "completed",
+    "turns": 5,
+    "duration": 14.9,
+    "transcript_lines": 12,
+    "betty_lines": 3,
+    "driver_lines": 9,
+    "interrupt_turns_planned": 2,
+    "interrupt_cut_in_logged": 2,
+    "interrupts_triggered": 1,
+    "betty_acknowledged_interrupt": 0,
+    "incomplete_betty_sentences": 2,
+    "short_driver_interjections": 9,
+    "transcript": [
+      {
+        "speaker": "Graeme",
+        "text": "Yeah, hello?",
+        "time": 2.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "Hey Graeme,",
+        "time": 6.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 6.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "Betty!",
+        "time": 6.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Mate, hang",
+        "time": 14.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "on.",
+        "time": 14.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I just",
+        "time": 14.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "had a",
+        "time": 14.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "blue",
+        "time": 14.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "with dispatch,",
+        "time": 14.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "stressin'",
+        "time": 14.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "me out.",
+        "time": 14.5
+      }
+    ]
+  },
+  {
+    "run": 4,
+    "status": "completed",
+    "turns": 7,
+    "duration": 43.8,
+    "transcript_lines": 62,
+    "betty_lines": 36,
+    "driver_lines": 26,
+    "interrupt_turns_planned": 2,
+    "interrupt_cut_in_logged": 2,
+    "interrupts_triggered": 1,
+    "betty_acknowledged_interrupt": 0,
+    "incomplete_betty_sentences": 31,
+    "short_driver_interjections": 26,
+    "transcript": [
+      {
+        "speaker": "Graeme",
+        "text": "Yeah, hello?",
+        "time": 2.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "Hey Graeme,",
+        "time": 8.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 8.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "Betty!",
+        "time": 8.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "Look,",
+        "time": 8.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "I know",
+        "time": 8.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "you're",
+        "time": 9.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "frustrated",
+        "time": 9.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "with",
+        "time": 9.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "dispatch,",
+        "time": 9.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "but",
+        "time": 9.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "I'm really",
+        "time": 9.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "worried,",
+        "time": 9.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "love.",
+        "time": 9.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "I can",
+        "time": 9.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "see",
+        "time": 9.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "you're",
+        "time": 9.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "looking",
+        "time": 9.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "exhausted.",
+        "time": 10.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "You've been",
+        "time": 11.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "going",
+        "time": 11.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "for",
+        "time": 11.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "a while",
+        "time": 11.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "now,",
+        "time": 12.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "and the",
+        "time": 12.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "heat",
+        "time": 12.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "is",
+        "time": 12.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "just",
+        "time": 12.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "awful.",
+        "time": 12.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "Please,",
+        "time": 12.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "Graeme,",
+        "time": 12.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "just",
+        "time": 13.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "pull over",
+        "time": 13.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "for a",
+        "time": 13.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "bit.",
+        "time": 13.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Nah, listen,",
+        "time": 24.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I'm",
+        "time": 24.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "fine.",
+        "time": 24.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Just",
+        "time": 25.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "had",
+        "time": 25.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "a blue",
+        "time": 25.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "with",
+        "time": 25.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "dispatch,",
+        "time": 25.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "the bloody",
+        "time": 25.8
+      },
+      {
+        "speaker": "Graeme",
+        "text": "idiots.",
+        "time": 25.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "They don't",
+        "time": 26.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "know what",
+        "time": 26.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "it's",
+        "time": 26.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "like",
+        "time": 26.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "out here.",
+        "time": 26.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "I know,",
+        "time": 34.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "love,",
+        "time": 34.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Yeah yeah,",
+        "time": 42.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I know.",
+        "time": 42.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I'm just",
+        "time": 42.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "nearly",
+        "time": 42.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "there,",
+        "time": 42.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "don't",
+        "time": 42.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "worry.",
+        "time": 42.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "This traffic's",
+        "time": 42.8
+      },
+      {
+        "speaker": "Graeme",
+        "text": "a nightmare",
+        "time": 42.8
+      },
+      {
+        "speaker": "Graeme",
+        "text": "though.",
+        "time": 42.8
+      }
+    ]
+  },
+  {
+    "run": 5,
+    "status": "completed",
+    "turns": 9,
+    "duration": 70.8,
+    "transcript_lines": 77,
+    "betty_lines": 43,
+    "driver_lines": 34,
+    "interrupt_turns_planned": 3,
+    "interrupt_cut_in_logged": 3,
+    "interrupts_triggered": 2,
+    "betty_acknowledged_interrupt": 0,
+    "incomplete_betty_sentences": 38,
+    "short_driver_interjections": 34,
+    "transcript": [
+      {
+        "speaker": "Graeme",
+        "text": "Yeah, g'day.",
+        "time": 3.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "Hey Graeme,",
+        "time": 6.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 6.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "Betty!",
+        "time": 6.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "Look,",
+        "time": 6.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "I know",
+        "time": 6.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "you're",
+        "time": 7.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "busy",
+        "time": 7.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "and",
+        "time": 7.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "frustrated,",
+        "time": 7.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "but",
+        "time": 7.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "I'm",
+        "time": 7.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "really",
+        "time": 7.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "worried",
+        "time": 7.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "about",
+        "time": 7.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "you,",
+        "time": 7.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "love.",
+        "time": 7.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "I can",
+        "time": 8.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "see",
+        "time": 8.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "you're looking",
+        "time": 8.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "a bit",
+        "time": 8.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "tired",
+        "time": 8.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "there,",
+        "time": 9.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "mate.",
+        "time": 9.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "You've been",
+        "time": 10.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "going",
+        "time": 10.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "for",
+        "time": 10.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "quite",
+        "time": 10.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "a while",
+        "time": 10.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "now.",
+        "time": 10.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "That",
+        "time": 11.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "fatigue",
+        "time": 11.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "camera",
+        "time": 11.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "picked",
+        "time": 11.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "something",
+        "time": 11.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "up again.",
+        "time": 11.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Mate, hang",
+        "time": 21.8
+      },
+      {
+        "speaker": "Graeme",
+        "text": "on.",
+        "time": 22.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Tired?",
+        "time": 22.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I'm always",
+        "time": 22.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "tired.",
+        "time": 22.8
+      },
+      {
+        "speaker": "Graeme",
+        "text": "It's this",
+        "time": 22.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "damn",
+        "time": 23.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "route,",
+        "time": 23.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "the heat,",
+        "time": 23.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "everything.",
+        "time": 23.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "And dispatch,",
+        "time": 23.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "don't",
+        "time": 23.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "even get",
+        "time": 23.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "me started",
+        "time": 24.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "on them.",
+        "time": 24.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "I know,",
+        "time": 33.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "I know",
+        "time": 33.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "Graeme,",
+        "time": 34.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 34.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Nah, listen.",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "They don't",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "get",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "it,",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Betty.",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Think",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "this",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "truck",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "drives",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "itself?",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Just",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "had a",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "blue",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "with 'em",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "about",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "the schedule,",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "absolute",
+        "time": 42.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "joke.",
+        "time": 42.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "35",
+        "time": 45.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "I hear",
+        "time": 52.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "you,",
+        "time": 52.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 52.5
+      }
+    ]
+  },
+  {
+    "run": 6,
+    "status": "completed",
+    "turns": 7,
+    "duration": 37.9,
+    "transcript_lines": 57,
+    "betty_lines": 34,
+    "driver_lines": 23,
+    "interrupt_turns_planned": 2,
+    "interrupt_cut_in_logged": 2,
+    "interrupts_triggered": 1,
+    "betty_acknowledged_interrupt": 0,
+    "incomplete_betty_sentences": 28,
+    "short_driver_interjections": 23,
+    "transcript": [
+      {
+        "speaker": "Graeme",
+        "text": "Yeah, hello?",
+        "time": 3.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "Hey Graeme,",
+        "time": 5.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 6.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "Betty!",
+        "time": 6.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "I can see",
+        "time": 6.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "you're looking",
+        "time": 6.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "really",
+        "time": 6.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "exhausted",
+        "time": 6.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "there,",
+        "time": 6.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "love.",
+        "time": 7.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "Please",
+        "time": 7.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "tell",
+        "time": 7.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "me you'll",
+        "time": 7.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "pull",
+        "time": 7.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "over",
+        "time": 7.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "soon.",
+        "time": 7.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "I know",
+        "time": 9.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "you're",
+        "time": 9.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "fine,",
+        "time": 9.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "Graeme,",
+        "time": 9.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "but",
+        "time": 9.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "I'm really",
+        "time": 9.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "worried.",
+        "time": 10.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "I can",
+        "time": 10.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "see",
+        "time": 10.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "how",
+        "time": 10.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "tired",
+        "time": 10.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "you look.",
+        "time": 10.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "You've",
+        "time": 10.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "been",
+        "time": 10.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "pushing",
+        "time": 10.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "it for",
+        "time": 10.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "too",
+        "time": 11.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "long.",
+        "time": 11.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Mate, hang",
+        "time": 22.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "on.",
+        "time": 22.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Yeah,",
+        "time": 22.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I'm",
+        "time": 22.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "fine.",
+        "time": 22.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Just",
+        "time": 22.8
+      },
+      {
+        "speaker": "Graeme",
+        "text": "got",
+        "time": 22.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "to get",
+        "time": 23.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "this",
+        "time": 23.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "load",
+        "time": 23.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "delivered.",
+        "time": 23.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "Safety comes",
+        "time": 29.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Nah, listen,",
+        "time": 37.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "dispatch",
+        "time": 37.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "are already",
+        "time": 37.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "givin'",
+        "time": 37.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "me an",
+        "time": 37.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "earful.",
+        "time": 37.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "They don't",
+        "time": 37.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "get",
+        "time": 37.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "what it's",
+        "time": 37.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "like",
+        "time": 37.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "out here.",
+        "time": 37.4
+      }
+    ]
+  },
+  {
+    "run": 7,
+    "status": "completed",
+    "turns": 5,
+    "duration": 17.6,
+    "transcript_lines": 21,
+    "betty_lines": 6,
+    "driver_lines": 15,
+    "interrupt_turns_planned": 2,
+    "interrupt_cut_in_logged": 2,
+    "interrupts_triggered": 1,
+    "betty_acknowledged_interrupt": 0,
+    "incomplete_betty_sentences": 5,
+    "short_driver_interjections": 15,
+    "transcript": [
+      {
+        "speaker": "Graeme",
+        "text": "Yeah, g'day.",
+        "time": 3.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "Hey Graeme,",
+        "time": 6.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 6.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "Betty!",
+        "time": 6.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "Look,",
+        "time": 6.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "I can see",
+        "time": 6.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "you're looking",
+        "time": 6.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Nah listen,",
+        "time": 15.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "not",
+        "time": 15.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "really",
+        "time": 15.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "keen",
+        "time": 15.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "for a",
+        "time": 15.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "chat,",
+        "time": 15.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Betty.",
+        "time": 15.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Just",
+        "time": 15.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "had a",
+        "time": 15.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "blue",
+        "time": 15.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "with dispatch,",
+        "time": 15.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "the whole",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "thing's",
+        "time": 15.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "a mess.",
+        "time": 15.2
+      }
+    ]
+  },
+  {
+    "run": 8,
+    "status": "completed",
+    "turns": 8,
+    "duration": 51.5,
+    "transcript_lines": 35,
+    "betty_lines": 18,
+    "driver_lines": 17,
+    "interrupt_turns_planned": 3,
+    "interrupt_cut_in_logged": 3,
+    "interrupts_triggered": 2,
+    "betty_acknowledged_interrupt": 0,
+    "incomplete_betty_sentences": 14,
+    "short_driver_interjections": 17,
+    "transcript": [
+      {
+        "speaker": "Graeme",
+        "text": "Yeah, hello?",
+        "time": 3.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "What do",
+        "time": 3.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "you want?",
+        "time": 3.8
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I'm busy.",
+        "time": 3.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "Hey Graeme,",
+        "time": 8.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 8.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Mate, hang",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "on.",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I just",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "got",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "off",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "the phone",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "with",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "dispatch,",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "what a",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "joke.",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "They got",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "no",
+        "time": 16.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "idea.",
+        "time": 16.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "love.",
+        "time": 17.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "I know,",
+        "time": 24.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "I know",
+        "time": 24.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "It\u2019s just",
+        "time": 33.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "30",
+        "time": 33.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "kilometres",
+        "time": 33.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "away.",
+        "time": 33.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "Go",
+        "time": 33.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "on,",
+        "time": 33.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "pull",
+        "time": 34.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "over,",
+        "time": 34.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "have a",
+        "time": 34.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "break.",
+        "time": 34.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "You'll feel",
+        "time": 34.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "much",
+        "time": 34.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "better.",
+        "time": 34.6
+      }
+    ]
+  },
+  {
+    "run": 9,
+    "status": "completed",
+    "turns": 5,
+    "duration": 16.5,
+    "transcript_lines": 16,
+    "betty_lines": 2,
+    "driver_lines": 14,
+    "interrupt_turns_planned": 2,
+    "interrupt_cut_in_logged": 2,
+    "interrupts_triggered": 1,
+    "betty_acknowledged_interrupt": 0,
+    "incomplete_betty_sentences": 2,
+    "short_driver_interjections": 14,
+    "transcript": [
+      {
+        "speaker": "Graeme",
+        "text": "Yeah, g'day.",
+        "time": 3.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Make it",
+        "time": 3.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "quick,",
+        "time": 3.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I'm busy.",
+        "time": 3.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "Hey Graeme,",
+        "time": 7.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 7.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Nah listen,",
+        "time": 16.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "dispatch",
+        "time": 16.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "are having",
+        "time": 16.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "a lend.",
+        "time": 16.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Don't",
+        "time": 16.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "get",
+        "time": 16.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "what it's",
+        "time": 16.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "like",
+        "time": 16.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "out here,",
+        "time": 16.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "ya know?",
+        "time": 16.2
+      }
+    ]
+  },
+  {
+    "run": 10,
+    "status": "completed",
+    "turns": 9,
+    "duration": 70.9,
+    "transcript_lines": 112,
+    "betty_lines": 68,
+    "driver_lines": 44,
+    "interrupt_turns_planned": 2,
+    "interrupt_cut_in_logged": 2,
+    "interrupts_triggered": 1,
+    "betty_acknowledged_interrupt": 2,
+    "incomplete_betty_sentences": 55,
+    "short_driver_interjections": 44,
+    "transcript": [
+      {
+        "speaker": "Graeme",
+        "text": "Yeah, hello?",
+        "time": 3.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "Hey Graeme,",
+        "time": 6.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "it's",
+        "time": 6.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "Betty!",
+        "time": 6.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "Look,",
+        "time": 6.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "I'm",
+        "time": 6.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "really",
+        "time": 6.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "worried,",
+        "time": 7.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "love,",
+        "time": 7.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "the system",
+        "time": 7.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "pinged",
+        "time": 7.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "me again.",
+        "time": 7.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "I can",
+        "time": 7.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "see",
+        "time": 7.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "you're practically",
+        "time": 7.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "falling",
+        "time": 8.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "asleep",
+        "time": 8.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "there.",
+        "time": 8.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "Please Graeme,",
+        "time": 9.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "you have",
+        "time": 10.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "to pull",
+        "time": 10.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "over.",
+        "time": 10.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "There's",
+        "time": 10.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "a roadhouse",
+        "time": 10.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "just",
+        "time": 10.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "down the",
+        "time": 11.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "road.",
+        "time": 11.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "Go on,",
+        "time": 12.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "take",
+        "time": 13.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "a break.",
+        "time": 13.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "You know",
+        "time": 13.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "I'm right.",
+        "time": 13.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "I've sent",
+        "time": 13.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "the details",
+        "time": 13.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "to your",
+        "time": 13.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "screen.",
+        "time": 13.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Nah, listen,",
+        "time": 25.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I'm",
+        "time": 25.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "fine.",
+        "time": 25.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Just",
+        "time": 25.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "tired,",
+        "time": 25.8
+      },
+      {
+        "speaker": "Graeme",
+        "text": "yeah?",
+        "time": 25.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "This",
+        "time": 26.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "bloody",
+        "time": 26.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "dispatch,",
+        "time": 26.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "they got",
+        "time": 26.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "no",
+        "time": 26.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "idea",
+        "time": 26.8
+      },
+      {
+        "speaker": "Graeme",
+        "text": "what it's",
+        "time": 26.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "like",
+        "time": 27.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "out here.",
+        "time": 27.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "I know",
+        "time": 34.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "you're frustrated,",
+        "time": 34.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "Graeme,",
+        "time": 34.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "but",
+        "time": 34.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "tired",
+        "time": 34.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "isn't",
+        "time": 34.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "fine,",
+        "time": 34.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "love.",
+        "time": 35.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "You've",
+        "time": 35.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "had",
+        "time": 35.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "too many",
+        "time": 35.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "close",
+        "time": 35.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "calls",
+        "time": 35.7
+      },
+      {
+        "speaker": "Betty",
+        "text": "today.",
+        "time": 35.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "I'm",
+        "time": 36.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "calling",
+        "time": 36.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "your manager,",
+        "time": 36.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "you need",
+        "time": 36.4
+      },
+      {
+        "speaker": "Betty",
+        "text": "a proper",
+        "time": 36.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "break.",
+        "time": 37.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "Safety is",
+        "time": 38.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "the most",
+        "time": 38.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "important",
+        "time": 38.6
+      },
+      {
+        "speaker": "Betty",
+        "text": "thing,",
+        "time": 38.8
+      },
+      {
+        "speaker": "Betty",
+        "text": "Graeme.",
+        "time": 39.0
+      },
+      {
+        "speaker": "Betty",
+        "text": "I need",
+        "time": 39.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "you",
+        "time": 39.2
+      },
+      {
+        "speaker": "Betty",
+        "text": "to understand",
+        "time": 39.3
+      },
+      {
+        "speaker": "Betty",
+        "text": "that.",
+        "time": 39.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Mate, hang",
+        "time": 50.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "on.",
+        "time": 50.3
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I'm nearly",
+        "time": 50.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "there.",
+        "time": 50.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "This",
+        "time": 50.7
+      },
+      {
+        "speaker": "Graeme",
+        "text": "traffic's",
+        "time": 50.9
+      },
+      {
+        "speaker": "Graeme",
+        "text": "a joke",
+        "time": 51.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "though,",
+        "time": 51.2
+      },
+      {
+        "speaker": "Graeme",
+        "text": "doing",
+        "time": 51.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "me head",
+        "time": 51.4
+      },
+      {
+        "speaker": "Graeme",
+        "text": "in.",
+        "time": 51.5
+      },
+      {
+        "speaker": "Graeme",
+        "text": "And",
+        "time": 51.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "the heat,",
+        "time": 51.6
+      },
+      {
+        "speaker": "Graeme",
+        "text": "it's",
+        "time": 52.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "bloody",
+        "time": 52.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "relentless.",
+        "time": 52.1
+      },
+      {
+        "speaker": "Betty",
+        "text": "I hear",
+        "time": 59.9
+      },
+      {
+        "speaker": "Betty",
+        "text": "you,",
+        "time": 60.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "Graeme,",
+        "time": 60.5
+      },
+      {
+        "speaker": "Betty",
+        "text": "I really",
+        "time": 60.8
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Yeah yeah,",
+        "time": 69.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I know,",
+        "time": 69.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "safety.",
+        "time": 69.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "Just",
+        "time": 69.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "let",
+        "time": 69.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "me get",
+        "time": 69.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "to Coolgardie,",
+        "time": 69.0
+      },
+      {
+        "speaker": "Graeme",
+        "text": "alright?",
+        "time": 69.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "I'll have",
+        "time": 69.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "a proper",
+        "time": 69.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "break",
+        "time": 69.1
+      },
+      {
+        "speaker": "Graeme",
+        "text": "then.",
+        "time": 69.1
+      }
+    ]
+  }
+]

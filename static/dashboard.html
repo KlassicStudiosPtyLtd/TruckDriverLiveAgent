@@ -32,6 +32,29 @@
     </header>
 
     <div class="container">
+        <!-- Quick Call -->
+        <div class="card full-width" id="card-quick-call" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(99, 102, 241, 0.3);">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+                <div>
+                    <h2 style="margin:0 0 0.25rem 0;">Talk to Betty</h2>
+                    <div style="font-size:0.85rem; color:var(--text-muted);">
+                        Start a simulated conversation — an AI driver persona will chat with Betty. Select a driver below to change who she calls.
+                    </div>
+                </div>
+                <div class="btn-group" style="margin:0;">
+                    <button class="btn btn-primary" onclick="quickCallBetty('companion_check_in')" style="font-size:0.95rem; padding:0.6rem 1.25rem;">
+                        Companion Check-in
+                    </button>
+                    <button class="btn btn-warning" onclick="quickCallBetty('fatigue_camera')" style="font-size:0.95rem; padding:0.6rem 1.25rem;">
+                        Fatigue Event
+                    </button>
+                    <button class="btn btn-success" onclick="quickCallBetty('driver_initiated')" style="font-size:0.95rem; padding:0.6rem 1.25rem;">
+                        Driver Calls Betty
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Driver Status -->
         <div class="card" id="card-drivers">
             <h2>Drivers</h2>
