@@ -110,8 +110,8 @@ This is a hackathon prototype, but the path to real-world deployment is clear:
 
 ## Try It
 
-- **Live demo:** [bettyai.klassicstudios.com/demo](https://bettyai.klassicstudios.com/demo)
-- **Dashboard:** [bettyai.klassicstudios.com](https://bettyai.klassicstudios.com/)
+- **Live demo:** [bettyai.klassicstudios.com](https://bettyai.klassicstudios.com/)
+- **Dashboard:** [bettyai.klassicstudios.com/dashboard](https://bettyai.klassicstudios.com/dashboard)
 - **GitHub:** [github.com/KlassicStudiosPtyLtd/TruckDriverLiveAgent](https://github.com/KlassicStudiosPtyLtd/TruckDriverLiveAgent)
 
 No microphone needed. Simulation mode is on by default — just click and watch Betty in action.
