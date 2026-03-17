@@ -503,11 +503,18 @@ async def blog_post(slug: str):
     return HTMLResponse(content=html)
 
 
-# --- Root redirect ---
+# --- Routes ---
 
 @app.get("/")
 async def root():
     return FileResponse(os.path.join(STATIC_DIR, "demo.html"))
+
+
+@app.get("/demo")
+async def demo_redirect():
+    """Redirect /demo to / for backward compatibility."""
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/")
 
 
 @app.get("/dashboard")
