@@ -350,6 +350,50 @@ select:focus { outline: 2px solid var(--primary); border-color: transparent; }
     color: var(--text-muted);
 }
 
+/* Notification bar */
+.notification-bar {
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 500;
+    gap: 1rem;
+}
+
+.notification-bar.error {
+    background: #fef2f2;
+    color: #991b1b;
+    border-bottom: 1px solid #fecaca;
+}
+
+.notification-bar.warning {
+    background: #fffbeb;
+    color: #92400e;
+    border-bottom: 1px solid #fde68a;
+}
+
+.notification-bar.info {
+    background: #eff6ff;
+    color: #1e40af;
+    border-bottom: 1px solid #bfdbfe;
+}
+
+.notification-dismiss {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.6;
+    padding: 0 0.25rem;
+    line-height: 1;
+}
+
+.notification-dismiss:hover {
+    opacity: 1;
+}
+
 /* Mode selector tabs */
 .mode-selector {
     display: flex;

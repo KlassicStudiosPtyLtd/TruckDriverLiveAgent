@@ -54,6 +54,22 @@ async function preloadSfx() {
 }
 preloadSfx();
 
+// --- Notification bar ---
+
+function showNotification(message, type = 'error') {
+  const bar = document.getElementById('notification-bar');
+  const text = document.getElementById('notification-text');
+  if (!bar || !text) return;
+  text.textContent = message;
+  bar.className = `notification-bar ${type}`;
+  bar.style.display = 'flex';
+}
+
+function dismissNotification() {
+  const bar = document.getElementById('notification-bar');
+  if (bar) bar.style.display = 'none';
+}
+
 // Stop all audio and end active calls on page unload (refresh / navigate away)
 window.addEventListener('beforeunload', () => {
   stopRinging();
@@ -159,6 +175,8 @@ function connectDemoWs() {
       handleCard(data);
     } else if (data.type === 'interrupted') {
       clearPlayback();
+    } else if (data.type === 'call_error') {
+      showNotification(data.message || 'An error occurred during the call.', 'error');
     }
   };
 

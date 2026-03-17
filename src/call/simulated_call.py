@@ -814,8 +814,20 @@ async def run_simulated_call(
 
     except asyncio.CancelledError:
         logger.info("Simulated call task cancelled for %s", driver_id)
-    except Exception:
+    except Exception as exc:
         logger.exception("Error in simulated call for %s", driver_id)
+        # Notify dashboard of the error
+        error_msg = str(exc)
+        if "1011" in error_msg or "Internal error" in error_msg:
+            error_msg = "Gemini API internal error — the call was interrupted. Please try again."
+        try:
+            await call_manager.broadcast_to_dashboard({
+                "type": "call_error",
+                "driver_id": driver_id,
+                "message": error_msg,
+            })
+        except Exception:
+            pass
     finally:
         # Save recording
         recording_path = _save_recording(audio_segments, driver_id, trigger_type, t0)

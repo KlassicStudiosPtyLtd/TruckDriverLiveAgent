@@ -221,8 +221,20 @@ async def handle_driver_call(
     except WebSocketDisconnect:
         logger.info("Driver %s disconnected (received %d audio chunks, %d KB)",
                      driver_id, audio_chunks_received, audio_bytes_received // 1024)
-    except Exception:
+    except Exception as exc:
         logger.exception("Error in call handler for driver %s", driver_id)
+        error_msg = str(exc)
+        if "1011" in error_msg or "Internal error" in error_msg:
+            error_msg = "Gemini API internal error — the call was interrupted. Please try again."
+        try:
+            await ws.send_json({"type": "error", "message": error_msg})
+            await call_manager.broadcast_to_dashboard({
+                "type": "call_error",
+                "driver_id": driver_id,
+                "message": error_msg,
+            })
+        except Exception:
+            pass
     finally:
         await session.close()
         call_manager.end_call(driver_id)

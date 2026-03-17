@@ -64,6 +64,22 @@ function declineIncoming() {
   refreshStatus();
 }
 
+// --- Notification bar ---
+
+function showNotification(message, type = 'error') {
+  const bar = document.getElementById('notification-bar');
+  const text = document.getElementById('notification-text');
+  if (!bar || !text) return;
+  text.textContent = message;
+  bar.className = `notification-bar ${type}`;
+  bar.style.display = 'flex';
+}
+
+function dismissNotification() {
+  const bar = document.getElementById('notification-bar');
+  if (bar) bar.style.display = 'none';
+}
+
 function getUserName() {
   const el = document.getElementById('user-name');
   return (el && el.value.trim()) || 'Graeme';
@@ -217,6 +233,7 @@ async function startLiveMicCall(driverId) {
           clearPlayback();
         } else if (data.type === 'error') {
           addLocalLog('ERROR', data.message);
+          showNotification(data.message || 'An error occurred during the call.', 'error');
         }
       }
     };
@@ -315,6 +332,9 @@ function connectDashboardWs() {
       handleShiftMessage(data);
     } else if (data.type === 'card') {
       displayCard(data);
+    } else if (data.type === 'call_error') {
+      showNotification(data.message || 'An error occurred during the call.', 'error');
+      addLocalLog('ERROR', data.message || 'Call error');
     }
   };
 
@@ -825,16 +845,19 @@ function applyPreset() {
   document.getElementById('persona-mood').value = preset.mood || '';
   document.getElementById('persona-situation').value = preset.situation || '';
   document.getElementById('persona-resistance').value = preset.resistance || '';
+  document.getElementById('persona-interrupts').checked = !!preset.interrupts;
 }
 
 function getPersonaPayload() {
   const mood = document.getElementById('persona-mood').value;
   const situation = document.getElementById('persona-situation').value;
   const resistance = document.getElementById('persona-resistance').value;
+  const interrupts = document.getElementById('persona-interrupts').checked;
   const payload = {};
   if (mood) payload.persona_mood = mood;
   if (situation) payload.persona_situation = situation;
   if (resistance) payload.persona_resistance = resistance;
+  if (interrupts) payload.persona_interrupts = true;
   return payload;
 }
 
